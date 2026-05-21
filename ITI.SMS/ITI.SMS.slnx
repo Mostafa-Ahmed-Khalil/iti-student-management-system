@@ -3,4 +3,5 @@
   <Project Path="ITI.SMS.Application/ITI.SMS.Application.csproj" />
   <Project Path="ITI.SMS.Domain/ITI.SMS.Domain.csproj" />
   <Project Path="ITI.SMS.Infrastructure/ITI.SMS.Infrastructure.csproj" />
+  <Project Path="ITI.SMS.Tests/ITI.SMS.Tests.csproj" />
 </Solution>

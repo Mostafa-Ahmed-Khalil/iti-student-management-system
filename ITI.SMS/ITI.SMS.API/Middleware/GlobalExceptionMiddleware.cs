@@ -32,15 +32,27 @@ public class GlobalExceptionMiddleware
     private static Task HandleExceptionAsync(HttpContext context, Exception exception)
     {
         context.Response.ContentType = "application/json";
-        context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+        
+        var statusCode = HttpStatusCode.InternalServerError;
+        var errorCode = "INTERNAL_SERVER_ERROR";
+        var details = new[] { exception.Message };
+
+        if (exception is ITI.SMS.Application.Common.Exceptions.InvalidCredentialsException)
+        {
+            statusCode = HttpStatusCode.Unauthorized;
+            errorCode = "INVALID_CREDENTIALS";
+            details = new[] { "Email or password is incorrect." };
+        }
+
+        context.Response.StatusCode = (int)statusCode;
 
         var responseEnvelope = new
         {
             success = false,
             error = new
             {
-                code = "INTERNAL_SERVER_ERROR",
-                details = new[] { exception.Message }
+                code = errorCode,
+                details = details
             }
         };
 

@@ -1,7 +1,9 @@
+using ITI.SMS.Application.Common.Interfaces;
 using ITI.SMS.Domain.Entities;
 using ITI.SMS.Domain.Interfaces;
 using ITI.SMS.Infrastructure.Data;
 using ITI.SMS.Infrastructure.Repositories;
+using ITI.SMS.Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -35,6 +37,7 @@ public static class DependencyInjection
         .AddDefaultTokenProviders();
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 
         return services;
     }

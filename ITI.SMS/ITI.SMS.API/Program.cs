@@ -1,5 +1,9 @@
+using System.Text;
 using ITI.SMS.API.Middleware;
+using ITI.SMS.Application;
 using ITI.SMS.Infrastructure;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using Serilog;
 
 try
@@ -19,10 +23,80 @@ try
 
     // Add services to the container.
     builder.Services.AddControllers();
-    builder.Services.AddOpenApi();
+    
+    builder.Services.AddOpenApi(options =>
+    {
+        options.AddDocumentTransformer((document, context, cancellationToken) =>
+        {
+            document.Components ??= new Microsoft.OpenApi.OpenApiComponents();
+            document.Components.SecuritySchemes ??= new Dictionary<string, Microsoft.OpenApi.IOpenApiSecurityScheme>();
+            
+            var securityScheme = new Microsoft.OpenApi.OpenApiSecurityScheme
+            {
+                Type = Microsoft.OpenApi.SecuritySchemeType.Http,
+                Scheme = "bearer",
+                BearerFormat = "JWT",
+                Description = "Input your JWT token in this format: Bearer {your token}"
+            };
+            
+            document.Components!.SecuritySchemes.Add("Bearer", securityScheme);
+            
+            var securityRequirement = new Microsoft.OpenApi.OpenApiSecurityRequirement
+            {
+                {
+                    new Microsoft.OpenApi.OpenApiSecuritySchemeReference("Bearer", document),
+                    new List<string>()
+                }
+            };
+            
+            document.Security = new List<Microsoft.OpenApi.OpenApiSecurityRequirement> { securityRequirement };
+            
+            return Task.CompletedTask;
+        });
+    });
+
+    builder.Services.AddApplication();
     builder.Services.AddInfrastructure(builder.Configuration);
 
+    builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(options =>
+    {
+        var jwtSettings = builder.Configuration.GetSection("Jwt");
+        var secret = jwtSettings["Secret"] ?? throw new InvalidOperationException("JWT Secret not configured.");
+        var key = Encoding.UTF8.GetBytes(secret);
+
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = jwtSettings["Issuer"],
+            ValidAudience = jwtSettings["Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(key),
+            ClockSkew = TimeSpan.Zero
+        };
+    });
+
     var app = builder.Build();
+
+    // Seed database on startup
+    using (var scope = app.Services.CreateScope())
+    {
+        try
+        {
+            var services = scope.ServiceProvider;
+            await ITI.SMS.Infrastructure.Data.DbInitializer.SeedAsync(services);
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "An error occurred while seeding the database.");
+        }
+    }
 
     // Use Global Exception Middleware
     app.UseMiddleware<GlobalExceptionMiddleware>();
@@ -61,7 +135,8 @@ try
             .ToArray();
         return forecast;
     })
-    .WithName("GetWeatherForecast");
+    .WithName("GetWeatherForecast")
+    .RequireAuthorization();
 
     app.Run();
 }

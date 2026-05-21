@@ -1,9 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "yDFTUKjMJcA=",
+  "dgSpecHash": "6cmWs8gxgSo=",
   "success": true,
   "projectFilePath": "C:\\work\\projects\\iti-student-management-system\\ITI.SMS\\ITI.SMS.Application\\ITI.SMS.Application.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\mosta\\.nuget\\packages\\mediatr\\12.4.1\\mediatr.12.4.1.nupkg.sha512",
+    "C:\\Users\\mosta\\.nuget\\packages\\mediatr.contracts\\2.0.1\\mediatr.contracts.2.0.1.nupkg.sha512",
     "C:\\Users\\mosta\\.nuget\\packages\\microsoft.aspnetcore.cryptography.internal\\10.0.8\\microsoft.aspnetcore.cryptography.internal.10.0.8.nupkg.sha512",
     "C:\\Users\\mosta\\.nuget\\packages\\microsoft.aspnetcore.cryptography.keyderivation\\10.0.8\\microsoft.aspnetcore.cryptography.keyderivation.10.0.8.nupkg.sha512",
     "C:\\Users\\mosta\\.nuget\\packages\\microsoft.extensions.caching.abstractions\\10.0.8\\microsoft.extensions.caching.abstractions.10.0.8.nupkg.sha512",
