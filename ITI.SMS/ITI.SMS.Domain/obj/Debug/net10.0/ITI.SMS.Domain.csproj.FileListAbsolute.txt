@@ -1,0 +1,13 @@
+C:\work\projects\iti-student-management-system\ITI.SMS\ITI.SMS.Domain\bin\Debug\net10.0\ITI.SMS.Domain.deps.json
+C:\work\projects\iti-student-management-system\ITI.SMS\ITI.SMS.Domain\bin\Debug\net10.0\ITI.SMS.Domain.dll
+C:\work\projects\iti-student-management-system\ITI.SMS\ITI.SMS.Domain\bin\Debug\net10.0\ITI.SMS.Domain.pdb
+C:\work\projects\iti-student-management-system\ITI.SMS\ITI.SMS.Domain\obj\Debug\net10.0\ITI.SMS.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\work\projects\iti-student-management-system\ITI.SMS\ITI.SMS.Domain\obj\Debug\net10.0\ITI.SMS.Domain.AssemblyInfoInputs.cache
+C:\work\projects\iti-student-management-system\ITI.SMS\ITI.SMS.Domain\obj\Debug\net10.0\ITI.SMS.Domain.AssemblyInfo.cs
+C:\work\projects\iti-student-management-system\ITI.SMS\ITI.SMS.Domain\obj\Debug\net10.0\ITI.SMS.Domain.csproj.CoreCompileInputs.cache
+C:\work\projects\iti-student-management-system\ITI.SMS\ITI.SMS.Domain\obj\Debug\net10.0\ITI.SMS.Domain.sourcelink.json
+C:\work\projects\iti-student-management-system\ITI.SMS\ITI.SMS.Domain\obj\Debug\net10.0\ITI.SMS.Domain.dll
+C:\work\projects\iti-student-management-system\ITI.SMS\ITI.SMS.Domain\obj\Debug\net10.0\refint\ITI.SMS.Domain.dll
+C:\work\projects\iti-student-management-system\ITI.SMS\ITI.SMS.Domain\obj\Debug\net10.0\ITI.SMS.Domain.pdb
+C:\work\projects\iti-student-management-system\ITI.SMS\ITI.SMS.Domain\obj\Debug\net10.0\ref\ITI.SMS.Domain.dll
+C:\work\projects\iti-student-management-system\ITI.SMS\ITI.SMS.Domain\obj\Debug\net10.0\ITI.SMS.Domain.csproj.AssemblyReference.cache

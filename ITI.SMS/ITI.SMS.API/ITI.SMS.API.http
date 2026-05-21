@@ -1,0 +1,6 @@
+@ITI.SMS.API_HostAddress = http://localhost:5029
+
+GET {{ITI.SMS.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

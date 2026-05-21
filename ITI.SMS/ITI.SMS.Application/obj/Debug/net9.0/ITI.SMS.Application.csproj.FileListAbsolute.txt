@@ -1,0 +1,16 @@
+C:\work\projects\iti-student-management-system\ITI.SMS\ITI.SMS.Application\bin\Debug\net9.0\ITI.SMS.Application.deps.json
+C:\work\projects\iti-student-management-system\ITI.SMS\ITI.SMS.Application\bin\Debug\net9.0\ITI.SMS.Application.dll
+C:\work\projects\iti-student-management-system\ITI.SMS\ITI.SMS.Application\bin\Debug\net9.0\ITI.SMS.Application.pdb
+C:\work\projects\iti-student-management-system\ITI.SMS\ITI.SMS.Application\bin\Debug\net9.0\ITI.SMS.Domain.dll
+C:\work\projects\iti-student-management-system\ITI.SMS\ITI.SMS.Application\bin\Debug\net9.0\ITI.SMS.Domain.pdb
+C:\work\projects\iti-student-management-system\ITI.SMS\ITI.SMS.Application\obj\Debug\net9.0\ITI.SMS.Application.csproj.AssemblyReference.cache
+C:\work\projects\iti-student-management-system\ITI.SMS\ITI.SMS.Application\obj\Debug\net9.0\ITI.SMS.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\work\projects\iti-student-management-system\ITI.SMS\ITI.SMS.Application\obj\Debug\net9.0\ITI.SMS.Application.AssemblyInfoInputs.cache
+C:\work\projects\iti-student-management-system\ITI.SMS\ITI.SMS.Application\obj\Debug\net9.0\ITI.SMS.Application.AssemblyInfo.cs
+C:\work\projects\iti-student-management-system\ITI.SMS\ITI.SMS.Application\obj\Debug\net9.0\ITI.SMS.Application.csproj.CoreCompileInputs.cache
+C:\work\projects\iti-student-management-system\ITI.SMS\ITI.SMS.Application\obj\Debug\net9.0\ITI.SMS.Application.sourcelink.json
+C:\work\projects\iti-student-management-system\ITI.SMS\ITI.SMS.Application\obj\Debug\net9.0\ITI.SMS..876F7F32.Up2Date
+C:\work\projects\iti-student-management-system\ITI.SMS\ITI.SMS.Application\obj\Debug\net9.0\ITI.SMS.Application.dll
+C:\work\projects\iti-student-management-system\ITI.SMS\ITI.SMS.Application\obj\Debug\net9.0\refint\ITI.SMS.Application.dll
+C:\work\projects\iti-student-management-system\ITI.SMS\ITI.SMS.Application\obj\Debug\net9.0\ITI.SMS.Application.pdb
+C:\work\projects\iti-student-management-system\ITI.SMS\ITI.SMS.Application\obj\Debug\net9.0\ref\ITI.SMS.Application.dll

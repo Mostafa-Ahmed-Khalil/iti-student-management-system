@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="ITI.SMS.API/ITI.SMS.API.csproj" />
+  <Project Path="ITI.SMS.Application/ITI.SMS.Application.csproj" />
+  <Project Path="ITI.SMS.Domain/ITI.SMS.Domain.csproj" />
+  <Project Path="ITI.SMS.Infrastructure/ITI.SMS.Infrastructure.csproj" />
+</Solution>
