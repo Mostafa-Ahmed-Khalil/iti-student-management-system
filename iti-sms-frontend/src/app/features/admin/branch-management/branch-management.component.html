@@ -1,0 +1,72 @@
+<div class="branch-management-container">
+  <div class="header">
+    <h2>Branch Management</h2>
+    <button class="btn btn-primary" (click)="openAddModal()" [disabled]="isLoading()">Add Branch</button>
+  </div>
+
+  <div class="card">
+    <div class="table-responsive">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Location</th>
+            <th>Status</th>
+            <th>Created At</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="isLoading() && branches().length === 0">
+            <td colspan="5" class="text-center">Loading branches...</td>
+          </tr>
+          <tr *ngIf="!isLoading() && branches().length === 0">
+            <td colspan="5" class="text-center">No branches found.</td>
+          </tr>
+          <tr *ngFor="let branch of branches()">
+            <td>{{ branch.name }}</td>
+            <td>{{ branch.location }}</td>
+            <td>
+              <span class="badge" [ngClass]="branch.isActive ? 'badge-success' : 'badge-error'">
+                {{ branch.isActive ? 'Active' : 'Inactive' }}
+              </span>
+            </td>
+            <td>{{ branch.createdAt | date:'shortDate' }}</td>
+            <td class="actions">
+              <button class="btn btn-sm btn-outline" (click)="openEditModal(branch)">Edit</button>
+              <button class="btn btn-sm btn-danger" *ngIf="branch.isActive" (click)="deactivateBranch(branch)">Deactivate</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal-backdrop" *ngIf="isModalOpen()">
+    <div class="modal card">
+      <div class="modal-header">
+        <h3>{{ modalTitle() }}</h3>
+        <button class="close-btn" (click)="closeModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="branchForm" (ngSubmit)="saveBranch()">
+          <div class="form-group">
+            <label for="name">Branch Name</label>
+            <input id="name" type="text" formControlName="name" class="form-control" placeholder="e.g., Qena Branch">
+          </div>
+          <div class="form-group">
+            <label for="location">Location</label>
+            <input id="location" type="text" formControlName="location" class="form-control" placeholder="e.g., Qena">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline" (click)="closeModal()">Cancel</button>
+            <button type="submit" class="btn btn-primary" [disabled]="branchForm.invalid || isLoading()">
+              {{ isLoading() ? 'Saving...' : 'Save' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

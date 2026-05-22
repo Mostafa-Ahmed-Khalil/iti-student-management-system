@@ -16,6 +16,8 @@ public class AppDbContext : IdentityDbContext<
     IdentityRoleClaim<string>, 
     IdentityUserToken<string>>
 {
+    public DbSet<Branch> Branches => Set<Branch>();
+
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
     }

@@ -37,6 +37,7 @@ public static class DependencyInjection
         .AddDefaultTokenProviders();
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddScoped<IBranchRepository, BranchRepository>();
         services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
         services.AddScoped<IRoleHierarchyScopeService, RoleHierarchyScopeService>();
 

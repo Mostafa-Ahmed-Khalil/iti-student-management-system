@@ -1,0 +1,24 @@
+.branch-management-container {
+  padding: 1.5rem;
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+
+    h2 {
+      margin: 0;
+      color: var(--text-color);
+    }
+  }
+
+  .table-responsive {
+    overflow-x: auto;
+  }
+
+  .actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+}

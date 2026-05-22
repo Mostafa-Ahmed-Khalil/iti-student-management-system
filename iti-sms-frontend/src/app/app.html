@@ -1,8 +1,8 @@
-<div class="app-shell">
-  <header class="app-header">
+<div class="app-shell" [class.is-guest]="!authStore.isLoggedIn()">
+  <header class="app-header" *ngIf="authStore.isLoggedIn()">
     <div class="logo">ITI Student Management System</div>
     
-    <div class="user-controls" *ngIf="authStore.isLoggedIn()">
+    <div class="user-controls">
       <div class="role-switcher">
         <span>Viewing as:</span>
         <select *ngIf="authStore.allRoles().length > 1; else singleRole" 

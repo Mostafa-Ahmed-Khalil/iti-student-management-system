@@ -16,6 +16,69 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "ITI.SMS.API.Controllers.BranchesController",
+    "Method": "GetBranches",
+    "RelativePath": "api/v1/Branches",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ITI.SMS.API.Controllers.BranchesController",
+    "Method": "CreateBranch",
+    "RelativePath": "api/v1/Branches",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "command",
+        "Type": "ITI.SMS.Application.Branches.Commands.CreateBranchCommand",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ITI.SMS.API.Controllers.BranchesController",
+    "Method": "UpdateBranch",
+    "RelativePath": "api/v1/Branches/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "request",
+        "Type": "ITI.SMS.Application.Branches.DTOs.UpdateBranchRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ITI.SMS.API.Controllers.BranchesController",
+    "Method": "DeleteBranch",
+    "RelativePath": "api/v1/Branches/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "Program\u002B\u003C\u003Ec__DisplayClass0_0",
     "Method": "\u003C\u003CMain\u003E$\u003Eb__7",
     "RelativePath": "weatherforecast",
