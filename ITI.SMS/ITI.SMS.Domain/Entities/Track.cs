@@ -9,6 +9,9 @@ public class Track
     public int BranchId { get; set; }
     public Branch Branch { get; set; } = null!;
     
+    public string? SupervisorId { get; set; }
+    public ApplicationUser? Supervisor { get; set; }
+    
     public bool IsActive { get; set; } = true;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime? UpdatedAt { get; set; }

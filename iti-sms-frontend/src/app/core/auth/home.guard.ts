@@ -7,9 +7,12 @@ export const homeRedirectGuard: CanActivateFn = () => {
   const authStore = inject(AuthStore);
 
   const role = authStore.activeRole();
+  if (role === 'Admin') {
+    return router.parseUrl('/admin/branches');
+  }
   if (role === 'Branch Manager') {
     return router.parseUrl('/branch-manager/tracks');
   }
   
-  return router.parseUrl('/admin/branches');
+  return router.parseUrl('/403');
 };

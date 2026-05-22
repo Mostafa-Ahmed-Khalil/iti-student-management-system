@@ -9,11 +9,12 @@ import { ToolbarModule } from 'primeng/toolbar';
 import { ButtonModule } from 'primeng/button';
 import { SelectModule } from 'primeng/select';
 import { FormsModule } from '@angular/forms';
+import { SpinnerComponent } from './shared/components/spinner/spinner.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RouterModule, CommonModule, ToastModule, ToolbarModule, ButtonModule, SelectModule, FormsModule],
+  imports: [RouterOutlet, RouterModule, CommonModule, ToastModule, ToolbarModule, ButtonModule, SelectModule, FormsModule, SpinnerComponent],
   templateUrl: './app.html',
   styleUrls: ['./app.scss']
 })
@@ -24,6 +25,10 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.authStore.checkInitialState();
+  }
+
+  isLoginRoute() {
+    return this.router.url === '/login';
   }
 
   switchRole(role: string) {

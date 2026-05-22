@@ -4,7 +4,7 @@ using MediatR;
 
 namespace ITI.SMS.Application.Branches.Commands;
 
-public record UpdateBranchCommand(int Id, string Name, string Location) : IRequest;
+public record UpdateBranchCommand(int Id, string Name) : IRequest;
 
 public class UpdateBranchCommandHandler : IRequestHandler<UpdateBranchCommand>
 {
@@ -27,7 +27,7 @@ public class UpdateBranchCommandHandler : IRequestHandler<UpdateBranchCommand>
         }
 
         branch.Name = request.Name;
-        branch.Location = request.Location;
+
 
         await _branchRepository.UpdateAsync(branch, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);

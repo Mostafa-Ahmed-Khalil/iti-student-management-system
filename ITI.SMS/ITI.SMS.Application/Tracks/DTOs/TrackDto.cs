@@ -7,5 +7,6 @@ public class TrackDto
     public DateTime StartDate { get; set; }
     public int BranchId { get; set; }
     public bool IsActive { get; set; }
-    public DateTime CreatedAt { get; set; }
+    public string SupervisorId { get; set; } = string.Empty;
+    public string SupervisorName { get; set; } = string.Empty;
 }

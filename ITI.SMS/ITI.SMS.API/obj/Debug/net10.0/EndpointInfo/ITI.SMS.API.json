@@ -605,15 +605,11 @@
       },
       "CreateBranchCommand": {
         "required": [
-          "name",
-          "location"
+          "name"
         ],
         "type": "object",
         "properties": {
           "name": {
-            "type": "string"
-          },
-          "location": {
             "type": "string"
           }
         }
@@ -627,6 +623,9 @@
           "startDate": {
             "type": "string",
             "format": "date-time"
+          },
+          "supervisorId": {
+            "type": "string"
           }
         }
       },
@@ -670,9 +669,6 @@
         "properties": {
           "name": {
             "type": "string"
-          },
-          "location": {
-            "type": "string"
           }
         }
       },
@@ -688,6 +684,9 @@
           },
           "isActive": {
             "type": "boolean"
+          },
+          "supervisorId": {
+            "type": "string"
           }
         }
       },

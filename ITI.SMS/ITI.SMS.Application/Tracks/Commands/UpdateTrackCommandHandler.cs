@@ -25,6 +25,7 @@ public class UpdateTrackCommandHandler : IRequestHandler<UpdateTrackCommand>
         track.Name = request.Name;
         track.StartDate = request.StartDate;
         track.IsActive = request.IsActive;
+        track.SupervisorId = string.IsNullOrEmpty(request.SupervisorId) ? null : request.SupervisorId;
         track.UpdatedAt = DateTime.UtcNow;
 
         await _trackRepository.UpdateAsync(track, cancellationToken);

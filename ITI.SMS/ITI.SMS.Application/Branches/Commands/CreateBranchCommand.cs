@@ -5,7 +5,7 @@ using MediatR;
 
 namespace ITI.SMS.Application.Branches.Commands;
 
-public record CreateBranchCommand(string Name, string Location) : IRequest<BranchDto>;
+public record CreateBranchCommand(string Name) : IRequest<BranchDto>;
 
 public class CreateBranchCommandHandler : IRequestHandler<CreateBranchCommand, BranchDto>
 {
@@ -23,7 +23,7 @@ public class CreateBranchCommandHandler : IRequestHandler<CreateBranchCommand, B
         var branch = new Branch
         {
             Name = request.Name,
-            Location = request.Location,
+
             IsActive = true,
             CreatedAt = DateTime.UtcNow
         };
@@ -35,9 +35,9 @@ public class CreateBranchCommandHandler : IRequestHandler<CreateBranchCommand, B
         {
             Id = branch.Id,
             Name = branch.Name,
-            Location = branch.Location,
+
             IsActive = branch.IsActive,
-            CreatedAt = branch.CreatedAt
+            ManagerId = branch.ManagerId
         };
     }
 }

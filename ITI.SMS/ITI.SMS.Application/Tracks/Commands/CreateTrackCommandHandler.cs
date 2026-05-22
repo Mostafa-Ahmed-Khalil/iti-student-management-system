@@ -23,6 +23,7 @@ public class CreateTrackCommandHandler : IRequestHandler<CreateTrackCommand, Tra
             Name = request.Name,
             StartDate = request.StartDate,
             BranchId = request.BranchId,
+            SupervisorId = string.IsNullOrEmpty(request.SupervisorId) ? null : request.SupervisorId,
             IsActive = true,
             CreatedAt = DateTime.UtcNow
         };
@@ -37,7 +38,8 @@ public class CreateTrackCommandHandler : IRequestHandler<CreateTrackCommand, Tra
             StartDate = track.StartDate,
             BranchId = track.BranchId,
             IsActive = track.IsActive,
-            CreatedAt = track.CreatedAt
+            SupervisorId = track.SupervisorId ?? string.Empty,
+            SupervisorName = string.Empty // Can't easily populate this on create without another DB hit, UI doesn't usually need it immediately or we can just fetch it if needed.
         };
     }
 }

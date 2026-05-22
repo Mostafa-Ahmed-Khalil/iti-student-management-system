@@ -25,7 +25,8 @@ public class GetTracksByBranchQueryHandler : IRequestHandler<GetTracksByBranchQu
             StartDate = t.StartDate,
             BranchId = t.BranchId,
             IsActive = t.IsActive,
-            CreatedAt = t.CreatedAt
+            SupervisorId = t.SupervisorId ?? string.Empty,
+            SupervisorName = t.Supervisor != null ? (t.Supervisor.FullName ?? t.Supervisor.Email) : string.Empty
         }).ToList();
     }
 }

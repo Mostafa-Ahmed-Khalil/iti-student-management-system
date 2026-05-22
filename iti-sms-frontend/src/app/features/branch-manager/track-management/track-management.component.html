@@ -24,8 +24,8 @@
         <tr>
           <th>Name</th>
           <th>Start Date</th>
+          <th>Supervisor</th>
           <th>Status</th>
-          <th>Created At</th>
           <th>Actions</th>
         </tr>
       </ng-template>
@@ -33,12 +33,12 @@
         <tr>
           <td class="font-medium">{{ track.name }}</td>
           <td>{{ track.startDate | date:'mediumDate' }}</td>
+          <td>{{ track.supervisorName || 'Unassigned' }}</td>
           <td>
             <span [class]="'status-badge ' + (track.isActive ? 'status-active' : 'status-inactive')">
               {{ track.isActive ? 'Active' : 'Inactive' }}
             </span>
           </td>
-          <td class="text-muted">{{ track.createdAt | date:'short' }}</td>
           <td class="actions-cell">
             <p-button icon="pi pi-pencil" size="small" variant="outlined" (onClick)="openEditModal(track)"></p-button>
             <p-button icon="pi pi-times" size="small" severity="danger" *ngIf="track.isActive" (onClick)="deactivateTrack(track)"></p-button>
@@ -47,7 +47,7 @@
       </ng-template>
       <ng-template #empty>
         <tr>
-          <td colspan="5" class="empty-message">No tracks found. Click 'Add Track' to create one.</td>
+          <td colspan="6" class="empty-message">No tracks found. Click 'Add Track' to create one.</td>
         </tr>
       </ng-template>
     </p-table>
@@ -66,6 +66,26 @@
         <label for="startDate">Start Date</label>
         <input pInputText type="date" id="startDate" formControlName="startDate" class="w-full" />
         <small class="error-text" *ngIf="trackForm.get('startDate')?.touched && trackForm.get('startDate')?.invalid">Start Date is required</small>
+      </div>
+
+      <div class="form-group">
+        <label for="supervisorId">Track Supervisor (Optional)</label>
+        <p-select 
+          id="supervisorId" 
+          formControlName="supervisorId" 
+          [options]="supervisors()" 
+          optionLabel="fullName" 
+          optionValue="id" 
+          placeholder="Select a supervisor" 
+          styleClass="w-full"
+          [showClear]="true"
+          appendTo="body">
+          <ng-template let-user pTemplate="item">
+            <div class="flex align-items-center gap-2">
+              <div>{{ user.fullName || user.email }}</div>
+            </div>
+          </ng-template>
+        </p-select>
       </div>
       
       <div class="modal-footer">

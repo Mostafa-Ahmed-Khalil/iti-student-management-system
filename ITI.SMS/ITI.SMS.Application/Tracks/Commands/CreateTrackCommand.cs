@@ -8,4 +8,5 @@ public class CreateTrackCommand : IRequest<TrackDto>
     public int BranchId { get; set; }
     public string Name { get; set; } = string.Empty;
     public DateTime StartDate { get; set; }
+    public string SupervisorId { get; set; } = string.Empty;
 }

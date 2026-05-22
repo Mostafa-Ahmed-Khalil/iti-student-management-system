@@ -25,9 +25,8 @@ public class GetMyBranchQueryHandler : IRequestHandler<GetMyBranchQuery, BranchD
         {
             Id = branch.Id,
             Name = branch.Name,
-            Location = branch.Location,
+
             IsActive = branch.IsActive,
-            CreatedAt = branch.CreatedAt,
             ManagerId = branch.ManagerId,
             ManagerName = branch.Manager?.FullName
         };

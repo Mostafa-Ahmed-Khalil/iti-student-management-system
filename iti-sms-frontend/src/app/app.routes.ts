@@ -17,12 +17,14 @@ export const routes: Routes = [
   { 
     path: 'admin/branches', 
     loadComponent: () => import('./features/admin/branch-management/branch-management.component').then(m => m.BranchManagementComponent),
-    canActivate: [authGuard]
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['Admin'] }
   },
   { 
     path: 'admin/users', 
     loadComponent: () => import('./features/admin/user-management/user-management.component').then(m => m.UserManagementComponent),
-    canActivate: [authGuard]
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['Admin'] }
   },
   {
     path: 'branch-manager',

@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 [Authorize]
 public class UsersController : ApiControllerBase
 {
-    [AuthorizeRole("Admin")]
+    [AuthorizeRole("Admin", "Branch Manager")]
     [HttpGet]
     public async Task<IActionResult> GetUsers([FromQuery] int page = 1, [FromQuery] int pageSize = 50, CancellationToken cancellationToken = default)
     {

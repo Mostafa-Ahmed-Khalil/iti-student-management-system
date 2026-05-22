@@ -4,5 +4,6 @@ export interface Track {
   startDate: string;
   branchId: number;
   isActive: boolean;
-  createdAt: string;
+  supervisorId?: string;
+  supervisorName?: string;
 }

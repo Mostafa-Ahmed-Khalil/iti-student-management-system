@@ -42,27 +42,15 @@ export class BranchManagementComponent implements OnInit {
   modalTitle = signal<string>('Add Branch');
   editingBranchId = signal<number | null>(null);
 
-  isAssignManagerModalOpen = signal<boolean>(false);
   managers = signal<User[]>([]);
-  selectedBranch = signal<Branch | null>(null);
 
   availableManagers = computed(() => {
-    const selected = this.selectedBranch();
-    const assignedManagerIds = new Set(
-      this.branches()
-        .filter(b => b.managerId && b.id !== selected?.id)
-        .map(b => b.managerId!)
-    );
-    return this.managers().filter(m => !assignedManagerIds.has(m.id));
-  });
-
-  assignManagerForm: FormGroup = this.fb.group({
-    userId: ['', Validators.required]
+    return this.managers();
   });
 
   branchForm: FormGroup = this.fb.group({
     name: ['', Validators.required],
-    location: ['', Validators.required]
+    managerId: ['', Validators.required]
   });
 
   ngOnInit() {
@@ -115,7 +103,7 @@ export class BranchManagementComponent implements OnInit {
     this.editingBranchId.set(branch.id);
     this.branchForm.patchValue({
       name: branch.name,
-      location: branch.location
+      managerId: branch.managerId || ''
     });
     this.isModalOpen.set(true);
   }
@@ -124,89 +112,56 @@ export class BranchManagementComponent implements OnInit {
     this.isModalOpen.set(false);
   }
 
-  openAssignManagerModal(branch: Branch) {
-    this.selectedBranch.set(branch);
-    this.editingBranchId.set(branch.id);
-    this.assignManagerForm.reset();
-    if (branch.managerId) {
-      this.assignManagerForm.patchValue({ userId: branch.managerId });
-    }
-    this.isAssignManagerModalOpen.set(true);
-  }
-
-  closeAssignManagerModal() {
-    this.isAssignManagerModalOpen.set(false);
-  }
-
-  assignManager() {
-    if (this.assignManagerForm.invalid) return;
-
-    const branchId = this.editingBranchId();
-    const userId = this.assignManagerForm.value.userId;
-    if (!branchId || !userId) return;
-
-    // Find the selected manager's name for optimistic update
-    const manager = this.managers().find(m => m.id === userId);
-
-    this.isLoading.set(true);
-    this.toastService.loading('Assigning manager...');
-
-    this.branchService.assignManager(branchId, userId).subscribe({
-      next: (response) => {
-        this.toastService.clearLoading();
-        if (response.success) {
-          // Optimistically update the branch in the local signal so
-          // the manager chip appears immediately (even before API restart)
-          this.branches.update(list =>
-            list.map(b =>
-              b.id === branchId
-                ? { ...b, managerId: userId, managerName: manager?.fullName ?? manager?.email }
-                : b
-            )
-          );
-          this.toastService.success('Manager assigned successfully');
-          this.closeAssignManagerModal();
-          // Also refresh from server in background
-          this.loadBranches();
-        }
-      },
-      error: () => {
-        this.toastService.clearLoading();
-        this.toastService.error('Failed to assign manager');
-        this.isLoading.set(false);
-      },
-      complete: () => this.isLoading.set(false)
-    });
-  }
-
   saveBranch() {
     if (this.branchForm.invalid) return;
 
     this.isLoading.set(true);
-    const request = this.branchForm.value;
+    const { name, managerId } = this.branchForm.value;
+    const request = { name };
     const id = this.editingBranchId();
+
+    const handleSuccess = (branchId: number) => {
+      if (managerId) {
+        this.branchService.assignManager(branchId, managerId).subscribe({
+          next: () => {
+            this.toastService.success(id ? 'Branch updated successfully' : 'Branch created successfully');
+            this.loadBranches();
+            this.closeModal();
+          },
+          error: () => {
+            this.toastService.error('Branch saved but failed to assign manager');
+            this.loadBranches();
+            this.closeModal();
+          }
+        });
+      } else {
+        this.toastService.success(id ? 'Branch updated successfully' : 'Branch created successfully');
+        this.loadBranches();
+        this.closeModal();
+      }
+    };
 
     if (id) {
       this.branchService.updateBranch(id, request).subscribe({
         next: (response) => {
           if (response.success) {
-            this.toastService.success('Branch updated successfully');
-            this.loadBranches();
-            this.closeModal();
+            handleSuccess(id);
+          } else {
+            this.isLoading.set(false);
           }
         },
-        complete: () => this.isLoading.set(false)
+        error: () => this.isLoading.set(false)
       });
     } else {
       this.branchService.createBranch(request).subscribe({
         next: (response) => {
-          if (response.success) {
-            this.toastService.success('Branch created successfully');
-            this.loadBranches();
-            this.closeModal();
+          if (response.success && response.data) {
+            handleSuccess(response.data.id);
+          } else {
+            this.isLoading.set(false);
           }
         },
-        complete: () => this.isLoading.set(false)
+        error: () => this.isLoading.set(false)
       });
     }
   }

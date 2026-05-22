@@ -23,6 +23,7 @@ public class TrackRepository : ITrackRepository
     public async Task<IEnumerable<Track>> GetByBranchIdAsync(int branchId, CancellationToken cancellationToken = default)
     {
         return await _context.Tracks
+            .Include(t => t.Supervisor)
             .Where(t => t.BranchId == branchId)
             .ToListAsync(cancellationToken);
     }

@@ -49,6 +49,12 @@ public class AppDbContext : IdentityDbContext<
             .HasForeignKey(b => b.ManagerId)
             .OnDelete(DeleteBehavior.SetNull);
 
+        builder.Entity<Track>()
+            .HasOne(t => t.Supervisor)
+            .WithMany()
+            .HasForeignKey(t => t.SupervisorId)
+            .OnDelete(DeleteBehavior.SetNull);
+
         // Map tables and columns to snake_case
         foreach (var entity in builder.Model.GetEntityTypes())
         {

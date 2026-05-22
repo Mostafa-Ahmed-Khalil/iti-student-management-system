@@ -4,6 +4,8 @@ import { FormsModule, ReactiveFormsModule, FormBuilder, Validators, FormGroup } 
 import { TrackService } from '../../../core/services/track.service';
 import { Track } from '../../../core/models/track.model';
 import { ToastService } from '../../../core/toast.service';
+import { UserService } from '../../admin/user-management/user.service';
+import { User } from '../../admin/user-management/user.model';
 
 import { TableModule } from 'primeng/table';
 import { DialogModule } from 'primeng/dialog';
@@ -13,11 +15,12 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { CardModule } from 'primeng/card';
+import { SelectModule } from 'primeng/select';
 
 @Component({
   selector: 'app-track-management',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, TableModule, DialogModule, ButtonModule, InputTextModule, DatePickerModule, ConfirmDialogModule, CardModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, TableModule, DialogModule, ButtonModule, InputTextModule, DatePickerModule, ConfirmDialogModule, CardModule, SelectModule],
   providers: [ConfirmationService],
   templateUrl: './track-management.component.html',
   styleUrls: ['./track-management.component.scss'],
@@ -27,9 +30,11 @@ export class TrackManagementComponent implements OnInit {
   private trackService = inject(TrackService);
   private fb = inject(FormBuilder);
   private toastService = inject(ToastService);
+  private userService = inject(UserService);
 
   myBranch = signal<any>(null);
   tracks = signal<Track[]>([]);
+  supervisors = signal<User[]>([]);
   isLoading = signal<boolean>(false);
   
   isModalOpen = signal<boolean>(false);
@@ -38,11 +43,21 @@ export class TrackManagementComponent implements OnInit {
 
   trackForm: FormGroup = this.fb.group({
     name: ['', Validators.required],
-    startDate: ['', Validators.required]
+    startDate: ['', Validators.required],
+    supervisorId: ['']
   });
 
   ngOnInit() {
     this.loadMyBranchAndTracks();
+    this.loadSupervisors();
+  }
+
+  loadSupervisors() {
+    this.userService.getUsers().subscribe({
+      next: (users) => {
+        this.supervisors.set(users.filter(u => u.roles.includes('Technical Supervisor')));
+      }
+    });
   }
 
   loadMyBranchAndTracks() {
@@ -94,7 +109,8 @@ export class TrackManagementComponent implements OnInit {
 
     this.trackForm.patchValue({
       name: track.name,
-      startDate: dateString
+      startDate: dateString,
+      supervisorId: (track as any).supervisorId || ''
     });
     this.isModalOpen.set(true);
   }

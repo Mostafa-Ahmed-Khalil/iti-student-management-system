@@ -1,5 +1,5 @@
 <div class="app-shell" [class.is-guest]="!authStore.isLoggedIn()">
-  <p-toolbar *ngIf="authStore.isLoggedIn()" styleClass="app-header">
+  <p-toolbar *ngIf="authStore.isLoggedIn() && !isLoginRoute()" styleClass="app-header">
     <ng-template #start>
       <div class="logo">ITI SMS</div>
       
@@ -46,4 +46,5 @@
       </div>
     </ng-template>
   </p-toast>
+  <app-spinner></app-spinner>
 </div>

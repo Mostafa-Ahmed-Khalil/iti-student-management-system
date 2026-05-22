@@ -37,7 +37,7 @@ public class BranchesController : ApiControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateBranch(int id, [FromBody] UpdateBranchRequest request, CancellationToken cancellationToken)
     {
-        await Mediator.Send(new UpdateBranchCommand(id, request.Name, request.Location), cancellationToken);
+        await Mediator.Send(new UpdateBranchCommand(id, request.Name), cancellationToken);
         return Success<object?>(null, "Branch updated successfully.");
     }
 
@@ -81,7 +81,8 @@ public class BranchesController : ApiControllerBase
         { 
             BranchId = branchId, 
             Name = request.Name, 
-            StartDate = request.StartDate 
+            StartDate = request.StartDate,
+            SupervisorId = request.SupervisorId
         }, cancellationToken);
         
         return CreatedAtAction(nameof(GetTracks), new { branchId = branchId }, new ApiResponse<ITI.SMS.Application.Tracks.DTOs.TrackDto>
@@ -102,4 +103,5 @@ public class CreateTrackRequest
 {
     public string Name { get; set; } = string.Empty;
     public DateTime StartDate { get; set; }
+    public string SupervisorId { get; set; } = string.Empty;
 }

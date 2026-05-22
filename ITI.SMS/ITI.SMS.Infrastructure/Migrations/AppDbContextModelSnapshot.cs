@@ -156,11 +156,6 @@ namespace ITI.SMS.Infrastructure.Migrations
                         .HasColumnType("bit")
                         .HasColumnName("is_active");
 
-                    b.Property<string>("Location")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("location");
-
                     b.Property<string>("ManagerId")
                         .HasColumnType("nvarchar(450)")
                         .HasColumnName("manager_id");
@@ -209,6 +204,10 @@ namespace ITI.SMS.Infrastructure.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("start_date");
 
+                    b.Property<string>("SupervisorId")
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("supervisor_id");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2")
                         .HasColumnName("updated_at");
@@ -218,6 +217,9 @@ namespace ITI.SMS.Infrastructure.Migrations
 
                     b.HasIndex("BranchId")
                         .HasDatabaseName("i_x_tracks_branch_id");
+
+                    b.HasIndex("SupervisorId")
+                        .HasDatabaseName("i_x_tracks_supervisor_id");
 
                     b.ToTable("tracks");
                 });
@@ -375,7 +377,15 @@ namespace ITI.SMS.Infrastructure.Migrations
                         .IsRequired()
                         .HasConstraintName("f_k_tracks_branches_branch_id");
 
+                    b.HasOne("ITI.SMS.Domain.Entities.ApplicationUser", "Supervisor")
+                        .WithMany()
+                        .HasForeignKey("SupervisorId")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .HasConstraintName("f_k_tracks_users_supervisor_id");
+
                     b.Navigation("Branch");
+
+                    b.Navigation("Supervisor");
                 });
 
             modelBuilder.Entity("ITI.SMS.Domain.Entities.UserRole", b =>
