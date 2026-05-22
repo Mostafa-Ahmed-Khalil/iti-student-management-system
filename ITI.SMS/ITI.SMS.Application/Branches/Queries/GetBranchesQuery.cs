@@ -25,7 +25,9 @@ public class GetBranchesQueryHandler : IRequestHandler<GetBranchesQuery, IEnumer
             Name = b.Name,
             Location = b.Location,
             IsActive = b.IsActive,
-            CreatedAt = b.CreatedAt
+            CreatedAt = b.CreatedAt,
+            ManagerId = b.ManagerId,
+            ManagerName = b.Manager?.FullName
         });
     }
 }

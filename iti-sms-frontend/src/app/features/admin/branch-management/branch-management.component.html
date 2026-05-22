@@ -1,72 +1,93 @@
-<div class="branch-management-container">
-  <div class="header">
-    <h2>Branch Management</h2>
-    <button class="btn btn-primary" (click)="openAddModal()" [disabled]="isLoading()">Add Branch</button>
-  </div>
-
-  <div class="card">
-    <div class="table-responsive">
-      <table class="data-table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Location</th>
-            <th>Status</th>
-            <th>Created At</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngIf="isLoading() && branches().length === 0">
-            <td colspan="5" class="text-center">Loading branches...</td>
-          </tr>
-          <tr *ngIf="!isLoading() && branches().length === 0">
-            <td colspan="5" class="text-center">No branches found.</td>
-          </tr>
-          <tr *ngFor="let branch of branches()">
-            <td>{{ branch.name }}</td>
-            <td>{{ branch.location }}</td>
-            <td>
-              <span class="badge" [ngClass]="branch.isActive ? 'badge-success' : 'badge-error'">
-                {{ branch.isActive ? 'Active' : 'Inactive' }}
-              </span>
-            </td>
-            <td>{{ branch.createdAt | date:'shortDate' }}</td>
-            <td class="actions">
-              <button class="btn btn-sm btn-outline" (click)="openEditModal(branch)">Edit</button>
-              <button class="btn btn-sm btn-danger" *ngIf="branch.isActive" (click)="deactivateBranch(branch)">Deactivate</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- Modal -->
-  <div class="modal-backdrop" *ngIf="isModalOpen()">
-    <div class="modal card">
-      <div class="modal-header">
-        <h3>{{ modalTitle() }}</h3>
-        <button class="close-btn" (click)="closeModal()">&times;</button>
+<div class="management-container">
+  <p-card styleClass="premium-card">
+    <div class="header-row">
+      <div class="title-section">
+        <h2>Branch Management</h2>
+        <p>Manage ITI branches and their managers</p>
       </div>
-      <div class="modal-body">
-        <form [formGroup]="branchForm" (ngSubmit)="saveBranch()">
-          <div class="form-group">
-            <label for="name">Branch Name</label>
-            <input id="name" type="text" formControlName="name" class="form-control" placeholder="e.g., Qena Branch">
-          </div>
-          <div class="form-group">
-            <label for="location">Location</label>
-            <input id="location" type="text" formControlName="location" class="form-control" placeholder="e.g., Qena">
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-outline" (click)="closeModal()">Cancel</button>
-            <button type="submit" class="btn btn-primary" [disabled]="branchForm.invalid || isLoading()">
-              {{ isLoading() ? 'Saving...' : 'Save' }}
-            </button>
-          </div>
-        </form>
-      </div>
+      <p-button *ngIf="isAdmin()" label="Add Branch" icon="pi pi-plus" (onClick)="openAddModal()" [disabled]="isLoading()"></p-button>
     </div>
-  </div>
+
+    <p-table [value]="branches()" [loading]="isLoading()" dataKey="id" [paginator]="true" [rows]="10" styleClass="p-datatable-striped">
+      <ng-template #header>
+        <tr>
+          <th>Name</th>
+          <th>Location</th>
+          <th>Manager</th>
+          <th>Status</th>
+          <th>Created At</th>
+          <th *ngIf="isAdmin()">Actions</th>
+        </tr>
+      </ng-template>
+      <ng-template #body let-branch>
+        <tr>
+          <td>{{ branch.name }}</td>
+          <td>{{ branch.location }}</td>
+          <td>
+            <span *ngIf="branch.managerName" class="manager-chip">
+              <i class="pi pi-user"></i> {{ branch.managerName }}
+            </span>
+            <span *ngIf="!branch.managerName" class="unassigned-label">— Unassigned</span>
+          </td>
+          <td>
+            <span [class]="'status-badge ' + (branch.isActive ? 'status-active' : 'status-inactive')">
+              {{ branch.isActive ? 'Active' : 'Inactive' }}
+            </span>
+          </td>
+          <td>{{ branch.createdAt | date:'shortDate' }}</td>
+          <td class="actions-cell" *ngIf="isAdmin()">
+            <p-button icon="pi pi-user-plus" label="Assign" size="small" severity="info" variant="outlined" (onClick)="openAssignManagerModal(branch)"></p-button>
+            <p-button icon="pi pi-pencil" size="small" variant="outlined" (onClick)="openEditModal(branch)"></p-button>
+            <p-button icon="pi pi-times" size="small" severity="danger" *ngIf="branch.isActive" (onClick)="deactivateBranch(branch)"></p-button>
+            <p-button icon="pi pi-check" size="small" severity="success" *ngIf="!branch.isActive" (onClick)="reactivateBranch(branch)"></p-button>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template #empty>
+        <tr>
+          <td [attr.colspan]="isAdmin() ? 6 : 5" class="empty-message">No branches found.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-card>
+
+  <!-- Assign Manager Modal -->
+  <p-dialog header="Assign Branch Manager" [visible]="isAssignManagerModalOpen()" (visibleChange)="isAssignManagerModalOpen.set($event)" [modal]="true" [style]="{width: '400px'}" styleClass="premium-modal">
+    <form [formGroup]="assignManagerForm" (ngSubmit)="assignManager()" class="form-container">
+      <div class="form-group">
+        <label for="userId">Select Manager</label>
+        <p-select id="userId" formControlName="userId"
+          [options]="availableManagers()"
+          optionLabel="fullName"
+          optionValue="id"
+          placeholder="Select a manager"
+          styleClass="w-full">
+        </p-select>
+      </div>
+      <div class="modal-footer">
+        <p-button label="Cancel" severity="secondary" variant="outlined" (onClick)="closeAssignManagerModal()"></p-button>
+        <p-button type="submit" label="Assign" [loading]="isLoading()" [disabled]="assignManagerForm.invalid"></p-button>
+      </div>
+    </form>
+  </p-dialog>
+
+  <!-- Edit Modal -->
+  <p-dialog [header]="modalTitle()" [visible]="isModalOpen()" (visibleChange)="isModalOpen.set($event)" [modal]="true" [style]="{width: '400px'}" styleClass="premium-modal">
+    <form [formGroup]="branchForm" (ngSubmit)="saveBranch()" class="form-container">
+      <div class="form-group">
+        <label for="name">Branch Name</label>
+        <input pInputText id="name" formControlName="name" placeholder="e.g., Qena Branch" class="w-full" />
+      </div>
+      <div class="form-group">
+        <label for="location">Location</label>
+        <input pInputText id="location" formControlName="location" placeholder="e.g., Qena" class="w-full" />
+      </div>
+      <div class="modal-footer">
+        <p-button label="Cancel" severity="secondary" variant="outlined" (onClick)="closeModal()"></p-button>
+        <p-button type="submit" label="Save" [loading]="isLoading()" [disabled]="branchForm.invalid"></p-button>
+      </div>
+    </form>
+  </p-dialog>
+  
+  <p-confirmDialog></p-confirmDialog>
 </div>

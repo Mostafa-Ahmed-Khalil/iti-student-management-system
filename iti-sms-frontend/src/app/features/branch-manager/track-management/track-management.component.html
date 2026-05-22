@@ -1,0 +1,77 @@
+<div class="management-container">
+  <p-card styleClass="premium-card">
+    <div class="header-row">
+      <div class="title-section">
+        <h2>
+          Track Management 
+          <span *ngIf="myBranch()" class="branch-badge">
+            Branch: {{ myBranch().name }}
+          </span>
+        </h2>
+        <p>Manage tracks for your branch</p>
+      </div>
+      <p-button label="Add Track" icon="pi pi-plus" (onClick)="openAddModal()" [disabled]="!myBranch() || isLoading()"></p-button>
+    </div>
+
+    <div *ngIf="!myBranch() && !isLoading()" class="empty-state">
+      <i class="pi pi-building empty-icon"></i>
+      <h3>No Branch Assigned</h3>
+      <p>You have not been assigned to manage any branch yet.</p>
+    </div>
+
+    <p-table *ngIf="myBranch()" [value]="tracks()" [loading]="isLoading()" dataKey="id" [paginator]="true" [rows]="10" styleClass="p-datatable-striped">
+      <ng-template #header>
+        <tr>
+          <th>Name</th>
+          <th>Start Date</th>
+          <th>Status</th>
+          <th>Created At</th>
+          <th>Actions</th>
+        </tr>
+      </ng-template>
+      <ng-template #body let-track>
+        <tr>
+          <td class="font-medium">{{ track.name }}</td>
+          <td>{{ track.startDate | date:'mediumDate' }}</td>
+          <td>
+            <span [class]="'status-badge ' + (track.isActive ? 'status-active' : 'status-inactive')">
+              {{ track.isActive ? 'Active' : 'Inactive' }}
+            </span>
+          </td>
+          <td class="text-muted">{{ track.createdAt | date:'short' }}</td>
+          <td class="actions-cell">
+            <p-button icon="pi pi-pencil" size="small" variant="outlined" (onClick)="openEditModal(track)"></p-button>
+            <p-button icon="pi pi-times" size="small" severity="danger" *ngIf="track.isActive" (onClick)="deactivateTrack(track)"></p-button>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template #empty>
+        <tr>
+          <td colspan="5" class="empty-message">No tracks found. Click 'Add Track' to create one.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-card>
+
+  <!-- Modal -->
+  <p-dialog [header]="modalTitle()" [(visible)]="isModalOpen" [modal]="true" [style]="{width: '400px'}" styleClass="premium-modal">
+    <form [formGroup]="trackForm" (ngSubmit)="saveTrack()" class="form-container">
+      <div class="form-group">
+        <label for="name">Track Name</label>
+        <input pInputText id="name" formControlName="name" placeholder="e.g. Full Stack .NET" class="w-full" />
+        <small class="error-text" *ngIf="trackForm.get('name')?.touched && trackForm.get('name')?.invalid">Name is required</small>
+      </div>
+      
+      <div class="form-group">
+        <label for="startDate">Start Date</label>
+        <input pInputText type="date" id="startDate" formControlName="startDate" class="w-full" />
+        <small class="error-text" *ngIf="trackForm.get('startDate')?.touched && trackForm.get('startDate')?.invalid">Start Date is required</small>
+      </div>
+      
+      <div class="modal-footer">
+        <p-button label="Cancel" severity="secondary" variant="outlined" (onClick)="closeModal()"></p-button>
+        <p-button type="submit" label="Save Track" [loading]="isLoading()" [disabled]="trackForm.invalid"></p-button>
+      </div>
+    </form>
+  </p-dialog>
+</div>

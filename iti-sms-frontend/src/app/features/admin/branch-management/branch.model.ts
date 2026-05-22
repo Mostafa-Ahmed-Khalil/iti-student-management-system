@@ -4,6 +4,8 @@ export interface Branch {
   location: string;
   isActive: boolean;
   createdAt: string;
+  managerId?: string;
+  managerName?: string;
 }
 
 export interface CreateBranchRequest {

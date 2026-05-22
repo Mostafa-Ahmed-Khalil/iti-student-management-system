@@ -17,6 +17,7 @@ public class AppDbContext : IdentityDbContext<
     IdentityUserToken<string>>
 {
     public DbSet<Branch> Branches => Set<Branch>();
+    public DbSet<Track> Tracks => Set<Track>();
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
@@ -41,6 +42,12 @@ public class AppDbContext : IdentityDbContext<
                 .HasForeignKey(ur => ur.RoleId)
                 .IsRequired();
         });
+
+        builder.Entity<Branch>()
+            .HasOne(b => b.Manager)
+            .WithMany()
+            .HasForeignKey(b => b.ManagerId)
+            .OnDelete(DeleteBehavior.SetNull);
 
         // Map tables and columns to snake_case
         foreach (var entity in builder.Model.GetEntityTypes())

@@ -10,7 +10,7 @@ import { ApiResponse } from '../../../core/models/api-response.model';
 })
 export class BranchService {
   private http = inject(HttpClient);
-  private apiUrl = `${environment.apiBaseUrl}/api/v1/branches`;
+  private apiUrl = `${environment.apiBaseUrl}/branches`;
 
   getBranches(): Observable<ApiResponse<Branch[]>> {
     return this.http.get<ApiResponse<Branch[]>>(this.apiUrl);
@@ -26,5 +26,13 @@ export class BranchService {
 
   deleteBranch(id: number): Observable<ApiResponse<any>> {
     return this.http.delete<ApiResponse<any>>(`${this.apiUrl}/${id}`);
+  }
+
+  reactivateBranch(id: number): Observable<ApiResponse<any>> {
+    return this.http.put<ApiResponse<any>>(`${this.apiUrl}/${id}/reactivate`, {});
+  }
+
+  assignManager(branchId: number, userId: string): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/${branchId}/managers`, { userId });
   }
 }

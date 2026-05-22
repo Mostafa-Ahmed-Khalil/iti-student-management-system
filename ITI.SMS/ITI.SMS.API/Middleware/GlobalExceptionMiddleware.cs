@@ -43,6 +43,18 @@ public class GlobalExceptionMiddleware
             errorCode = "INVALID_CREDENTIALS";
             details = new[] { "Email or password is incorrect." };
         }
+        else if (exception is ITI.SMS.Application.Common.Exceptions.ValidationException)
+        {
+            statusCode = HttpStatusCode.BadRequest;
+            errorCode = "VALIDATION_ERROR";
+            details = new[] { exception.Message };
+        }
+        else if (exception is ITI.SMS.Application.Common.Exceptions.NotFoundException)
+        {
+            statusCode = HttpStatusCode.NotFound;
+            errorCode = "NOT_FOUND";
+            details = new[] { exception.Message };
+        }
 
         context.Response.StatusCode = (int)statusCode;
 

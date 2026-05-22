@@ -1,0 +1,111 @@
+<div class="management-container">
+  <p-card styleClass="premium-card">
+    <div class="header-row">
+      <div class="title-section">
+        <h2>User Management</h2>
+        <p>Manage system users and their roles</p>
+      </div>
+      <p-button label="Create User" icon="pi pi-plus" (onClick)="openCreateModal()"></p-button>
+    </div>
+
+    <p-table [value]="users()" [loading]="isLoading()" dataKey="id" [paginator]="true" [rows]="10" styleClass="p-datatable-striped">
+      <ng-template #header>
+        <tr>
+          <th>Full Name</th>
+          <th>Email</th>
+          <th>Roles</th>
+          <th>Actions</th>
+        </tr>
+      </ng-template>
+      <ng-template #body let-user>
+        <tr>
+          <td>{{ user.fullName }}</td>
+          <td>{{ user.email }}</td>
+          <td>
+            <span *ngFor="let role of user.roles" class="badge role-badge">{{ role }}</span>
+          </td>
+          <td class="actions-cell">
+            <p-button icon="pi pi-pencil" size="small" variant="outlined" pTooltip="Edit user" (onClick)="openEditModal(user)"></p-button>
+            <p-button icon="pi pi-cog" size="small" variant="outlined" severity="info" pTooltip="Edit roles" (onClick)="openRolesModal(user)"></p-button>
+            <p-button icon="pi pi-trash" size="small" severity="danger" pTooltip="Delete user" (onClick)="confirmDelete(user)"></p-button>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template #empty>
+        <tr>
+          <td colspan="4" class="empty-message">No users found.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-card>
+
+  <!-- Create User Modal -->
+  <p-dialog header="Create New User" [(visible)]="showCreateModal" [modal]="true" [style]="{width: '450px'}" styleClass="premium-modal">
+    <div class="form-container">
+      <div class="form-group">
+        <label>Full Name</label>
+        <input pInputText type="text" [(ngModel)]="newUser.fullName" placeholder="Enter full name" class="w-full" />
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input pInputText type="email" [(ngModel)]="newUser.email" placeholder="Enter email address" class="w-full" />
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <p-password [(ngModel)]="newUser.password" placeholder="Enter secure password" [toggleMask]="true" styleClass="w-full" inputStyleClass="w-full"></p-password>
+      </div>
+      <div class="form-group">
+        <label>Roles</label>
+        <div class="roles-container">
+          <div *ngFor="let role of availableRoles" class="checkbox-row">
+            <p-checkbox [binary]="true" [ngModel]="newUser.roles.includes(role)" (onChange)="toggleNewUserRole(role)" [inputId]="'createRole' + role"></p-checkbox>
+            <label [for]="'createRole' + role">{{ role }}</label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <p-button label="Cancel" severity="secondary" variant="outlined" (onClick)="closeCreateModal()"></p-button>
+      <p-button label="Create" [loading]="isLoading()" (onClick)="createUser()"></p-button>
+    </div>
+  </p-dialog>
+
+  <!-- Edit User Modal -->
+  <p-dialog header="Edit User" [(visible)]="showEditModal" [modal]="true" [style]="{width: '420px'}" styleClass="premium-modal">
+    <div class="form-container">
+      <div class="form-group">
+        <label>Full Name</label>
+        <input pInputText type="text" [(ngModel)]="editFullName" placeholder="Enter full name" class="w-full" />
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input pInputText type="email" [(ngModel)]="editEmail" placeholder="Enter email address" class="w-full" />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <p-button label="Cancel" severity="secondary" variant="outlined" (onClick)="closeEditModal()"></p-button>
+      <p-button label="Save" [loading]="isLoading()" (onClick)="saveUser()"></p-button>
+    </div>
+  </p-dialog>
+
+  <!-- Edit Roles Modal -->
+  <p-dialog [header]="'Edit Roles for ' + selectedUser?.fullName" [(visible)]="showRolesModal" [modal]="true" [style]="{width: '400px'}" styleClass="premium-modal">
+    <div class="form-container">
+      <div class="form-group">
+        <label>Assigned Roles</label>
+        <div class="roles-container">
+          <div *ngFor="let role of availableRoles" class="checkbox-row">
+            <p-checkbox [binary]="true" [ngModel]="editingRoles.includes(role)" (onChange)="toggleEditUserRole(role)" [inputId]="'editRole' + role"></p-checkbox>
+            <label [for]="'editRole' + role">{{ role }}</label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <p-button label="Cancel" severity="secondary" variant="outlined" (onClick)="closeRolesModal()"></p-button>
+      <p-button label="Save" [loading]="isLoading()" (onClick)="saveRoles()"></p-button>
+    </div>
+  </p-dialog>
+
+  <p-confirmDialog></p-confirmDialog>
+</div>

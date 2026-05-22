@@ -1,0 +1,97 @@
+.management-container {
+  padding: 1.5rem;
+
+  .header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+
+    .title-section {
+      h2 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin: 0;
+        color: #1f2937;
+      }
+      p {
+        color: #6b7280;
+        margin: 0.25rem 0 0 0;
+      }
+    }
+  }
+
+  .role-badge {
+    margin-right: 0.5rem;
+    background-color: var(--p-surface-200);
+    border: 1px solid var(--p-surface-300);
+    color: var(--p-surface-900);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    display: inline-block;
+  }
+
+  .actions-cell {
+    white-space: nowrap;
+    width: 1%;
+  }
+
+  .empty-message {
+    text-align: center;
+    padding: 1.5rem;
+    color: #6b7280;
+  }
+
+  .w-full {
+    width: 100% !important;
+  }
+}
+
+/* Modals */
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding-top: 0.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  label {
+    font-weight: 500;
+    color: #374151;
+  }
+}
+
+.roles-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+  padding: 0.75rem;
+  background-color: #f9fafb;
+  border-radius: 0.5rem;
+  border: 1px solid #f3f4f6;
+}
+
+.checkbox-row {
+  display: flex;
+  align-items: center;
+
+  label {
+    margin-left: 0.5rem;
+    cursor: pointer;
+    color: #374151;
+    font-weight: 400;
+  }
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}

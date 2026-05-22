@@ -1,36 +1,45 @@
-import { Injectable, signal } from '@angular/core';
-
-export interface Toast {
-  message: string;
-  type: 'success' | 'error' | 'info';
-  id: number;
-}
+import { Injectable, inject } from '@angular/core';
+import { MessageService } from 'primeng/api';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ToastService {
-  toasts = signal<Toast[]>([]);
-  private nextId = 0;
+  private messageService = inject(MessageService);
 
-  show(message: string, type: 'success' | 'error' | 'info' = 'info') {
-    const id = this.nextId++;
-    this.toasts.update(current => [...current, { message, type, id }]);
-    
-    setTimeout(() => {
-      this.remove(id);
-    }, 5000);
+  show(message: string, type: 'success' | 'error' | 'info' | 'warn' = 'info', summary?: string) {
+    this.messageService.add({
+      severity: type,
+      summary: summary ?? type.charAt(0).toUpperCase() + type.slice(1),
+      detail: message,
+      life: 3500
+    });
   }
 
   success(message: string) {
-    this.show(message, 'success');
+    this.show(message, 'success', 'Success');
   }
 
   error(message: string) {
-    this.show(message, 'error');
+    this.show(message, 'error', 'Error');
   }
 
-  remove(id: number) {
-    this.toasts.update(current => current.filter(t => t.id !== id));
+  info(message: string) {
+    this.show(message, 'info', 'Info');
+  }
+
+  loading(message: string) {
+    this.messageService.add({
+      severity: 'info',
+      summary: 'Loading',
+      detail: message,
+      sticky: true,
+      closable: false,
+      key: 'loading-toast'
+    });
+  }
+
+  clearLoading() {
+    this.messageService.clear('loading-toast');
   }
 }

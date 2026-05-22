@@ -16,12 +16,16 @@ public class BranchRepository : IBranchRepository
 
     public async Task<Branch?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
     {
-        return await _context.Branches.FindAsync(new object[] { id }, cancellationToken);
+        return await _context.Branches
+            .Include(b => b.Manager)
+            .FirstOrDefaultAsync(b => b.Id == id, cancellationToken);
     }
 
     public async Task<IEnumerable<Branch>> GetAllAsync(CancellationToken cancellationToken = default)
     {
-        return await _context.Branches.ToListAsync(cancellationToken);
+        return await _context.Branches
+            .Include(b => b.Manager)
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<Branch> AddAsync(Branch branch, CancellationToken cancellationToken = default)

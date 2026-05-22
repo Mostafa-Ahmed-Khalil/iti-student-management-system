@@ -1,33 +1,49 @@
 <div class="app-shell" [class.is-guest]="!authStore.isLoggedIn()">
-  <header class="app-header" *ngIf="authStore.isLoggedIn()">
-    <div class="logo">ITI Student Management System</div>
-    
-    <div class="user-controls">
-      <div class="role-switcher">
-        <span>Viewing as:</span>
-        <select *ngIf="authStore.allRoles().length > 1; else singleRole" 
-                [value]="authStore.activeRole()" 
-                (change)="switchRole($event)"
-                class="role-select">
-          <option *ngFor="let role of authStore.allRoles()" [value]="role">{{ role }}</option>
-        </select>
-        <ng-template #singleRole>
-          <span class="role-badge">{{ authStore.activeRole() }}</span>
-        </ng-template>
-      </div>
+  <p-toolbar *ngIf="authStore.isLoggedIn()" styleClass="app-header">
+    <ng-template #start>
+      <div class="logo">ITI SMS</div>
       
-      <button class="btn btn-outline" (click)="logout()">Logout</button>
-    </div>
-  </header>
+      <nav class="main-nav" *ngIf="authStore.activeRole() === 'Admin'">
+        <a routerLink="/admin/branches" routerLinkActive="active">Branches</a>
+        <a routerLink="/admin/users" routerLinkActive="active">Users</a>
+      </nav>
+      
+      <nav class="main-nav" *ngIf="authStore.activeRole() === 'Branch Manager'">
+        <a routerLink="/branch-manager/tracks" routerLinkActive="active">Tracks</a>
+      </nav>
+    </ng-template>
+    
+    <ng-template #end>
+      <div class="user-controls">
+        <div class="role-switcher">
+          <span>Viewing as:</span>
+          <p-select *ngIf="authStore.allRoles().length > 1; else singleRole" 
+                  [options]="authStore.allRoles()"
+                  [ngModel]="authStore.activeRole()" 
+                  (onChange)="switchRole($event.value)"
+                  size="small">
+          </p-select>
+          <ng-template #singleRole>
+            <span class="role-badge">{{ authStore.activeRole() }}</span>
+          </ng-template>
+        </div>
+        
+        <p-button label="Logout" icon="pi pi-sign-out" severity="secondary" variant="outlined" size="small" (onClick)="logout()"></p-button>
+      </div>
+    </ng-template>
+  </p-toolbar>
   
   <main class="app-content">
     <router-outlet></router-outlet>
   </main>
 
-  <div class="toast-container" *ngIf="toastService.toasts().length > 0">
-    <div *ngFor="let toast of toastService.toasts()" class="toast" [ngClass]="'toast-' + toast.type">
-      {{ toast.message }}
-      <button class="toast-close" (click)="toastService.remove(toast.id)">&times;</button>
-    </div>
-  </div>
+  <p-toast></p-toast>
+  <p-toast key="loading-toast" position="bottom-center" [baseZIndex]="9999">
+    <ng-template #message let-message>
+      <div class="loading-toast-content">
+        <i class="pi pi-spin pi-spinner"></i>
+        <span>{{ message.detail }}</span>
+      </div>
+    </ng-template>
+  </p-toast>
 </div>

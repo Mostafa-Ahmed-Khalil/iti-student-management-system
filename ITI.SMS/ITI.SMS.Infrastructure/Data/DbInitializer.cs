@@ -17,7 +17,7 @@ public static class DbInitializer
         var roleManager = serviceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
 
         // Seed Roles
-        string[] roles = ["Admin", "Student", "Instructor"];
+        string[] roles = ["Admin", "Branch Manager", "Technical Supervisor", "Student", "Instructor"];
         foreach (var roleName in roles)
         {
             if (!await roleManager.RoleExistsAsync(roleName))

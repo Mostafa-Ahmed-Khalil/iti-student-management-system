@@ -161,6 +161,10 @@ namespace ITI.SMS.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("location");
 
+                    b.Property<string>("ManagerId")
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("manager_id");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
@@ -169,7 +173,53 @@ namespace ITI.SMS.Infrastructure.Migrations
                     b.HasKey("Id")
                         .HasName("p_k_branches");
 
+                    b.HasIndex("ManagerId")
+                        .HasDatabaseName("i_x_branches_manager_id");
+
                     b.ToTable("branches");
+                });
+
+            modelBuilder.Entity("ITI.SMS.Domain.Entities.Track", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BranchId")
+                        .HasColumnType("int")
+                        .HasColumnName("branch_id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("created_at");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit")
+                        .HasColumnName("is_active");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("name");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("start_date");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("updated_at");
+
+                    b.HasKey("Id")
+                        .HasName("p_k_tracks");
+
+                    b.HasIndex("BranchId")
+                        .HasDatabaseName("i_x_tracks_branch_id");
+
+                    b.ToTable("tracks");
                 });
 
             modelBuilder.Entity("ITI.SMS.Domain.Entities.UserRole", b =>
@@ -305,6 +355,29 @@ namespace ITI.SMS.Infrastructure.Migrations
                     b.ToTable("user_tokens", (string)null);
                 });
 
+            modelBuilder.Entity("ITI.SMS.Domain.Entities.Branch", b =>
+                {
+                    b.HasOne("ITI.SMS.Domain.Entities.ApplicationUser", "Manager")
+                        .WithMany()
+                        .HasForeignKey("ManagerId")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .HasConstraintName("f_k_branches_users_manager_id");
+
+                    b.Navigation("Manager");
+                });
+
+            modelBuilder.Entity("ITI.SMS.Domain.Entities.Track", b =>
+                {
+                    b.HasOne("ITI.SMS.Domain.Entities.Branch", "Branch")
+                        .WithMany("Tracks")
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("f_k_tracks_branches_branch_id");
+
+                    b.Navigation("Branch");
+                });
+
             modelBuilder.Entity("ITI.SMS.Domain.Entities.UserRole", b =>
                 {
                     b.HasOne("ITI.SMS.Domain.Entities.ApplicationRole", "Role")
@@ -374,6 +447,11 @@ namespace ITI.SMS.Infrastructure.Migrations
             modelBuilder.Entity("ITI.SMS.Domain.Entities.ApplicationUser", b =>
                 {
                     b.Navigation("UserRoles");
+                });
+
+            modelBuilder.Entity("ITI.SMS.Domain.Entities.Branch", b =>
+                {
+                    b.Navigation("Tracks");
                 });
 #pragma warning restore 612, 618
         }
