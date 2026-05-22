@@ -154,6 +154,48 @@
   },
   {
     "ContainingType": "ITI.SMS.API.Controllers.CoursesController",
+    "Method": "GetLabEvaluations",
+    "RelativePath": "api/v1/Courses/{courseId}/evaluations",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "courseId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "trackId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ITI.SMS.API.Controllers.CoursesController",
+    "Method": "UpsertLabEvaluation",
+    "RelativePath": "api/v1/Courses/{courseId}/evaluations",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "courseId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "command",
+        "Type": "ITI.SMS.Application.Instructor.Commands.UpsertLabEvaluationCommand",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ITI.SMS.API.Controllers.CoursesController",
     "Method": "UpdateCourse",
     "RelativePath": "api/v1/Courses/{id}",
     "HttpMethod": "PUT",
@@ -183,6 +225,74 @@
     "Parameters": [
       {
         "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ITI.SMS.API.Controllers.CoursesController",
+    "Method": "GetMyCourses",
+    "RelativePath": "api/v1/Courses/me",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ITI.SMS.API.Controllers.EnrollmentsController",
+    "Method": "EnrollStudents",
+    "RelativePath": "api/v1/Enrollments/tracks/{trackId}/enrollments",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "trackId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "request",
+        "Type": "ITI.SMS.API.Controllers.EnrollStudentsRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ITI.SMS.API.Controllers.EnrollmentsController",
+    "Method": "UnenrollStudent",
+    "RelativePath": "api/v1/Enrollments/tracks/{trackId}/enrollments/{studentId}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "trackId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "studentId",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ITI.SMS.API.Controllers.EnrollmentsController",
+    "Method": "GetEnrolledStudents",
+    "RelativePath": "api/v1/Enrollments/tracks/{trackId}/students",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "trackId",
         "Type": "System.Int32",
         "IsRequired": true
       }

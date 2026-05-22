@@ -15,6 +15,10 @@ export const SUPERVISOR_ROUTES: Routes = [
     loadComponent: () => import('./course-management/course-management.component').then(m => m.CourseManagementComponent)
   },
   {
+    path: 'tracks/:trackId/enrollments',
+    loadComponent: () => import('./supervisor-enrollment/supervisor-enrollment.component').then(m => m.SupervisorEnrollmentComponent)
+  },
+  {
     path: 'students',
     loadComponent: () => import('./supervisor-students/supervisor-students.component').then(m => m.SupervisorStudentsComponent)
   }

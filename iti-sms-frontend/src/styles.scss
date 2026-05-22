@@ -264,3 +264,24 @@ body {
   from { transform: translateY(20px) scale(0.95); opacity: 0; }
   to { transform: translateY(0) scale(1); opacity: 1; }
 }
+
+/* Hide number input spinners (arrows) */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* For PrimeNG inputnumber native inputs */
+.p-inputnumber-input {
+  -moz-appearance: textfield;
+}
+.p-inputnumber-input::-webkit-outer-spin-button,
+.p-inputnumber-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+

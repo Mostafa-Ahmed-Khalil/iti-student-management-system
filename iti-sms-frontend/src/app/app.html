@@ -16,6 +16,10 @@
         <a routerLink="/supervisor/tracks" routerLinkActive="active">My Tracks</a>
         <a routerLink="/supervisor/students" routerLinkActive="active">Students</a>
       </nav>
+
+      <nav class="main-nav" *ngIf="authStore.activeRole() === 'Instructor'">
+        <a routerLink="/instructor/courses" routerLinkActive="active">My Courses</a>
+      </nav>
     </ng-template>
     
     <ng-template #end>

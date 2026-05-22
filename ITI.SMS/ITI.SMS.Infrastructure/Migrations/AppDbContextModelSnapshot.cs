@@ -228,6 +228,98 @@ namespace ITI.SMS.Infrastructure.Migrations
                     b.ToTable("courses");
                 });
 
+            modelBuilder.Entity("ITI.SMS.Domain.Entities.Enrollment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("EnrolledAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("enrolled_at");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit")
+                        .HasColumnName("is_active");
+
+                    b.Property<string>("StudentId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("student_id");
+
+                    b.Property<int>("TrackId")
+                        .HasColumnType("int")
+                        .HasColumnName("track_id");
+
+                    b.HasKey("Id")
+                        .HasName("p_k_enrollments");
+
+                    b.HasIndex("StudentId")
+                        .HasDatabaseName("i_x_enrollments_student_id");
+
+                    b.HasIndex("TrackId", "StudentId")
+                        .IsUnique()
+                        .HasDatabaseName("i_x_enrollments_track_id_student_id");
+
+                    b.ToTable("enrollments");
+                });
+
+            modelBuilder.Entity("ITI.SMS.Domain.Entities.LabEvaluation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CourseId")
+                        .HasColumnType("int")
+                        .HasColumnName("course_id");
+
+                    b.Property<int>("LabNumber")
+                        .HasColumnType("int")
+                        .HasColumnName("lab_number");
+
+                    b.Property<DateTime>("LastUpdatedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("last_updated_at");
+
+                    b.Property<decimal>("Score")
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnName("score");
+
+                    b.Property<string>("SoftSkillsNotes")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("soft_skills_notes");
+
+                    b.Property<string>("StudentId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("student_id");
+
+                    b.Property<string>("TechNotes")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("tech_notes");
+
+                    b.HasKey("Id")
+                        .HasName("p_k_lab_evaluations");
+
+                    b.HasIndex("StudentId")
+                        .HasDatabaseName("i_x_lab_evaluations_student_id");
+
+                    b.HasIndex("CourseId", "StudentId", "LabNumber")
+                        .IsUnique()
+                        .HasDatabaseName("i_x_lab_evaluations_course_id_student_id_lab_number");
+
+                    b.ToTable("lab_evaluations");
+                });
+
             modelBuilder.Entity("ITI.SMS.Domain.Entities.Track", b =>
                 {
                     b.Property<int>("Id")
@@ -440,6 +532,48 @@ namespace ITI.SMS.Infrastructure.Migrations
                     b.Navigation("Instructor");
 
                     b.Navigation("Track");
+                });
+
+            modelBuilder.Entity("ITI.SMS.Domain.Entities.Enrollment", b =>
+                {
+                    b.HasOne("ITI.SMS.Domain.Entities.ApplicationUser", "Student")
+                        .WithMany()
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("f_k_enrollments_users_student_id");
+
+                    b.HasOne("ITI.SMS.Domain.Entities.Track", "Track")
+                        .WithMany()
+                        .HasForeignKey("TrackId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("f_k_enrollments__tracks_track_id");
+
+                    b.Navigation("Student");
+
+                    b.Navigation("Track");
+                });
+
+            modelBuilder.Entity("ITI.SMS.Domain.Entities.LabEvaluation", b =>
+                {
+                    b.HasOne("ITI.SMS.Domain.Entities.Course", "Course")
+                        .WithMany()
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("f_k_lab_evaluations_courses_course_id");
+
+                    b.HasOne("ITI.SMS.Domain.Entities.ApplicationUser", "Student")
+                        .WithMany()
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("f_k_lab_evaluations_users_student_id");
+
+                    b.Navigation("Course");
+
+                    b.Navigation("Student");
                 });
 
             modelBuilder.Entity("ITI.SMS.Domain.Entities.Track", b =>

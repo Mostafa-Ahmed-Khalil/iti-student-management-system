@@ -1,8 +1,9 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { RouterOutlet, Router, RouterModule } from '@angular/router';
+import { RouterOutlet, Router, RouterModule, NavigationStart, NavigationEnd, NavigationCancel, NavigationError } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthStore } from './core/auth/auth.store';
 import { ToastService } from './core/toast.service';
+import { SpinnerService } from './core/spinner.service';
 
 import { ToastModule } from 'primeng/toast';
 import { ToolbarModule } from 'primeng/toolbar';
@@ -21,10 +22,27 @@ import { SpinnerComponent } from './shared/components/spinner/spinner.component'
 export class AppComponent implements OnInit {
   authStore = inject(AuthStore);
   toastService = inject(ToastService);
+  spinnerService = inject(SpinnerService);
   private router = inject(Router);
 
   ngOnInit() {
     this.authStore.checkInitialState();
+    
+    // Show spinner on routing transitions
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationStart) {
+        this.spinnerService.show();
+      } else if (
+        event instanceof NavigationEnd ||
+        event instanceof NavigationCancel ||
+        event instanceof NavigationError
+      ) {
+        // Add a micro-delay for smooth rendering and transitions
+        setTimeout(() => {
+          this.spinnerService.hide();
+        }, 200);
+      }
+    });
   }
 
   isLoginRoute() {

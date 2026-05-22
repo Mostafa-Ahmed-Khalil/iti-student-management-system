@@ -1,0 +1,103 @@
+.management-container {
+  padding: 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.back-nav {
+  margin-bottom: 1.5rem;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: color 0.2s ease;
+}
+
+.back-link:hover {
+  color: var(--color-primary);
+}
+
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 1rem;
+}
+
+.title-section h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-text-main);
+}
+
+.title-section p.subtitle {
+  margin: 0.5rem 0 0;
+  color: var(--color-text-muted);
+  font-size: 1rem;
+}
+
+.title-section p.subtitle strong {
+  color: var(--color-primary);
+}
+
+.enroll-action-bar {
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  background: rgba(255, 255, 255, 0.4);
+  padding: 1.25rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+}
+
+.select-wrapper {
+  flex: 1;
+  max-width: 450px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.select-wrapper label {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--color-text-main);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.student-option {
+  display: flex;
+  flex-direction: column;
+  padding: 0.25rem 0;
+}
+
+.option-name {
+  font-weight: 500;
+  color: var(--color-text-main);
+}
+
+.option-email {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+.empty-message {
+  text-align: center;
+  padding: 3rem !important;
+  color: var(--color-text-muted);
+}
+
+.font-medium {
+  font-weight: 500;
+}

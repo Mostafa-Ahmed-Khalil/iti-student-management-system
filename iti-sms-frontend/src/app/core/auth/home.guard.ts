@@ -16,6 +16,9 @@ export const homeRedirectGuard: CanActivateFn = () => {
   if (role === 'Technical Supervisor') {
     return router.parseUrl('/supervisor/tracks');
   }
+  if (role === 'Instructor') {
+    return router.parseUrl('/instructor/courses');
+  }
   
   return router.parseUrl('/403');
 };

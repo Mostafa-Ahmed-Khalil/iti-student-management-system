@@ -1,0 +1,125 @@
+<div class="eval-container">
+  <div class="eval-header">
+    <a routerLink="/instructor/courses" class="back-link">
+      <i class="pi pi-arrow-left"></i> My Courses
+    </a>
+    <div class="header-info">
+      <h1>Lab Evaluation Grid</h1>
+      <p *ngIf="grid()">{{ grid()!.numberOfLabs }} labs · {{ grid()!.students.length }} students</p>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading()" class="loading-state">
+    <i class="pi pi-spin pi-spinner"></i>
+    <span>Loading grid…</span>
+  </div>
+
+  <div *ngIf="!isLoading() && grid()" class="grid-wrapper">
+    <div class="grid-scroll">
+      <table class="eval-table">
+        <thead>
+          <tr>
+            <th class="student-col sticky-col">Student</th>
+            <th *ngFor="let lab of labNumbers()" class="lab-col">Lab {{ lab }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let student of grid()!.students">
+            <td class="student-name sticky-col">{{ student.fullName }}</td>
+            <td *ngFor="let lab of labNumbers()" class="eval-cell"
+                [class.evaluated]="getEval(student.id, lab)"
+                [class.score-1]="getEval(student.id, lab)?.score === 1"
+                [class.score-0]="getEval(student.id, lab)?.score === 0"
+                (click)="openNotes(student.id, student.fullName, lab)"
+                [pTooltip]="getEval(student.id, lab) ? 'Score: ' + getEval(student.id, lab)!.score + ' — Click to edit' : 'Click to evaluate'"
+                tooltipPosition="top">
+              <ng-container *ngIf="!isSavingCell(student.id, lab)">
+                <span *ngIf="getEval(student.id, lab) as ev" class="score-badge">
+                  {{ ev.score }}
+                </span>
+                <span *ngIf="!getEval(student.id, lab)" class="empty-cell">—</span>
+              </ng-container>
+              <i *ngIf="isSavingCell(student.id, lab)" class="pi pi-spin pi-spinner saving-spinner"></i>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div *ngIf="grid()!.students.length === 0" class="empty-state">
+      <i class="pi pi-users"></i>
+      <p>No students enrolled in this track yet. Ask the supervisor to enroll students.</p>
+    </div>
+  </div>
+
+  <div *ngIf="!isLoading() && !grid()" class="empty-state">
+    <i class="pi pi-exclamation-circle"></i>
+    <p>No data available. Make sure the track ID is correct.</p>
+  </div>
+</div>
+
+<!-- Notes Dialog -->
+<p-dialog
+  [header]="'Lab ' + activeLabNumber() + ' — ' + activeStudentName()"
+  [(visible)]="isNotesOpen"
+  [modal]="true"
+  [style]="{ width: '520px' }"
+  [draggable]="false"
+  [resizable]="false">
+
+  <form [formGroup]="notesForm" (ngSubmit)="saveNotes()" class="notes-form">
+    <div class="p-fluid">
+
+      <div class="field score-field">
+        <label>Score (0 or 1)</label>
+        <div class="score-toggles">
+          <button type="button" class="score-btn" [class.active]="notesForm.get('score')?.value === 0"
+                  (click)="notesForm.patchValue({ score: 0 })">0</button>
+          <button type="button" class="score-btn score-1" [class.active]="notesForm.get('score')?.value === 1"
+                  (click)="notesForm.patchValue({ score: 1 })">1</button>
+        </div>
+        <small class="error-hint" *ngIf="notesForm.get('score')?.value === null">Please select a score.</small>
+      </div>
+
+      <p-tabs value="0">
+        <p-tablist>
+          <p-tab value="0">
+            <i class="pi pi-code mr-1"></i> Tech Notes
+            <span class="tab-required">*</span>
+          </p-tab>
+          <p-tab value="1">
+            <i class="pi pi-heart mr-1"></i> Soft Skills
+            <span class="tab-required">*</span>
+          </p-tab>
+        </p-tablist>
+        <p-tabpanels>
+          <p-tabpanel value="0">
+            <div class="field mt-3">
+              <label>Technical Notes <span class="visible-badge">Visible to student</span></label>
+              <textarea pTextarea formControlName="techNotes" rows="5"
+                        placeholder="Enter technical feedback visible to the student…"
+                        style="width: 100%"></textarea>
+              <small class="error-hint" *ngIf="notesForm.get('techNotes')?.invalid && notesForm.get('techNotes')?.touched">Tech notes are required.</small>
+            </div>
+          </p-tabpanel>
+          <p-tabpanel value="1">
+            <div class="field mt-3">
+              <label>Soft Skills Notes <span class="private-badge">Instructor-only</span></label>
+              <textarea pTextarea formControlName="softSkillsNotes" rows="5"
+                        placeholder="Enter soft skills observations — NOT visible to the student…"
+                        style="width: 100%"></textarea>
+              <small class="error-hint" *ngIf="notesForm.get('softSkillsNotes')?.invalid && notesForm.get('softSkillsNotes')?.touched">Soft skills notes are required.</small>
+            </div>
+          </p-tabpanel>
+        </p-tabpanels>
+      </p-tabs>
+
+    </div>
+
+    <div class="dialog-footer">
+      <p-button label="Cancel" icon="pi pi-times" variant="text" (onClick)="isNotesOpen.set(false)" type="button"></p-button>
+      <p-button label="Save Evaluation" icon="pi pi-check" type="submit"
+                [disabled]="notesForm.invalid || notesForm.get('score')?.value === null"></p-button>
+    </div>
+  </form>
+</p-dialog>

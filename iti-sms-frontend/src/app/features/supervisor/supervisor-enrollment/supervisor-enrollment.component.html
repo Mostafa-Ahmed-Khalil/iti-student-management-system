@@ -1,0 +1,81 @@
+<div class="management-container">
+  <div class="back-nav">
+    <a routerLink="/supervisor/tracks" class="back-link">
+      <i class="pi pi-arrow-left"></i> Back to Tracks
+    </a>
+  </div>
+
+  <p-card styleClass="premium-card">
+    <div class="header-row">
+      <div class="title-section">
+        <h2>Manage Enrollments</h2>
+        <p class="subtitle" *ngIf="trackName()">Track: <strong>{{ trackName() }}</strong></p>
+      </div>
+    </div>
+
+    <!-- Enroll Section -->
+    <div class="enroll-action-bar">
+      <div class="select-wrapper">
+        <label for="student-select">Enroll Student</label>
+        <p-multiselect id="student-select"
+                       [options]="availableStudents()"
+                       [ngModel]="selectedStudentIds()"
+                       (ngModelChange)="selectedStudentIds.set($event)"
+                       optionLabel="fullName"
+                       optionValue="id"
+                       [filter]="true"
+                       filterBy="fullName,email"
+                       placeholder="Select students to enroll..."
+                       [style]="{ width: '100%' }">
+          <ng-template #option let-option>
+            <div class="student-option">
+              <span class="option-name">{{ option.fullName }}</span>
+              <span class="option-email">{{ option.email }}</span>
+            </div>
+          </ng-template>
+        </p-multiselect>
+      </div>
+      <p-button label="Enroll" 
+                icon="pi pi-user-plus" 
+                (onClick)="enrollStudents()" 
+                [disabled]="selectedStudentIds().length === 0 || isActionLoading()"></p-button>
+    </div>
+
+    <!-- Enrolled Students Table -->
+    <p-table [value]="enrolledStudents()" 
+             [loading]="isLoading()" 
+             dataKey="id" 
+             [paginator]="true" 
+             [rows]="10" 
+             styleClass="p-datatable-striped">
+      <ng-template #header>
+        <tr>
+          <th>Full Name</th>
+          <th>Email</th>
+          <th style="width: 120px">Actions</th>
+        </tr>
+      </ng-template>
+      <ng-template #body let-enrollment>
+        <tr>
+          <td class="font-medium">{{ enrollment.fullName }}</td>
+          <td>{{ enrollment.email }}</td>
+          <td>
+            <p-button icon="pi pi-trash" 
+                      severity="danger" 
+                      variant="text" 
+                      size="small"
+                      pTooltip="Remove student from track" 
+                      tooltipPosition="top"
+                      [disabled]="isActionLoading()"
+                      (onClick)="unenrollStudent(enrollment.id)"></p-button>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template #empty>
+        <tr>
+          <td colspan="3" class="empty-message">No students are currently enrolled in this track.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-card>
+</div>

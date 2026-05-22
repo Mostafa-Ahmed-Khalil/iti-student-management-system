@@ -29,6 +29,14 @@ public class CourseRepository : ICourseRepository
             .ToListAsync(cancellationToken);
     }
 
+    public async Task<IEnumerable<Course>> GetByInstructorIdAsync(string instructorId, CancellationToken cancellationToken = default)
+    {
+        return await _context.Courses
+            .Include(c => c.Track)
+            .Where(c => c.InstructorId == instructorId && c.IsActive)
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task<Course> AddAsync(Course course, CancellationToken cancellationToken = default)
     {
         await _context.Courses.AddAsync(course, cancellationToken);

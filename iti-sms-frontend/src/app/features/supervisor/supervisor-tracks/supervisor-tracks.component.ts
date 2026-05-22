@@ -41,6 +41,7 @@ import { CardModule } from 'primeng/card';
               </td>
               <td class="actions-cell">
                 <p-button label="Manage Courses" icon="pi pi-book" size="small" variant="outlined" [routerLink]="['/supervisor/tracks', track.id, 'courses']"></p-button>
+                <p-button label="Enroll Students" icon="pi pi-user-plus" size="small" variant="outlined" severity="secondary" [routerLink]="['/supervisor/tracks', track.id, 'enrollments']"></p-button>
               </td>
             </tr>
           </ng-template>

@@ -1,0 +1,45 @@
+<div class="courses-container">
+  <div class="page-header">
+    <h1>My Courses</h1>
+    <p>Select a course to enter the lab evaluation grid.</p>
+  </div>
+
+  <div *ngIf="isLoading()" class="loading-state">
+    <i class="pi pi-spin pi-spinner" style="font-size: 2rem; color: var(--p-primary-500)"></i>
+    <p>Loading your courses…</p>
+  </div>
+
+  <div *ngIf="!isLoading() && courses().length === 0" class="empty-state">
+    <i class="pi pi-book" style="font-size: 3rem; opacity: 0.3"></i>
+    <p>You have no courses assigned yet. Contact your Technical Supervisor.</p>
+  </div>
+
+  <div class="course-grid" *ngIf="!isLoading() && courses().length > 0">
+    <div class="course-card" *ngFor="let course of courses()">
+      <div class="course-card-header">
+        <span class="track-chip">{{ course.trackName }}</span>
+      </div>
+      <div class="course-card-body">
+        <h2>{{ course.name }}</h2>
+        <div class="course-stats">
+          <div class="stat">
+            <span class="stat-value">{{ course.numberOfLabs }}</span>
+            <span class="stat-label">Labs</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat">
+            <span class="stat-value">{{ course.numberOfLectures }}</span>
+            <span class="stat-label">Lectures</span>
+          </div>
+        </div>
+      </div>
+      <div class="course-card-footer">
+        <a [routerLink]="['/instructor/courses', course.id, 'evaluations']"
+           [queryParams]="{ trackId: course.trackId }"
+           class="enter-btn">
+          <i class="pi pi-table"></i> Open Evaluation Grid
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

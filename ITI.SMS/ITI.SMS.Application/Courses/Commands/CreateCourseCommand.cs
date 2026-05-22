@@ -27,6 +27,9 @@ public class CreateCourseCommandHandler : IRequestHandler<CreateCourseCommand, C
 
     public async Task<CourseDto> Handle(CreateCourseCommand request, CancellationToken cancellationToken)
     {
+        if (string.IsNullOrEmpty(request.InstructorId))
+            throw new Common.Exceptions.ValidationException("An instructor must be assigned to the course.");
+
         var course = new Course
         {
             Name = request.Name,

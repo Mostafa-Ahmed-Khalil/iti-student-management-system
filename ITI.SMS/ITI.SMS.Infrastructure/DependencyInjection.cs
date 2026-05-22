@@ -40,6 +40,8 @@ public static class DependencyInjection
         services.AddScoped<IBranchRepository, BranchRepository>();
         services.AddScoped<ITrackRepository, TrackRepository>();
         services.AddScoped<ICourseRepository, CourseRepository>();
+        services.AddScoped<IEnrollmentRepository, EnrollmentRepository>();
+        services.AddScoped<ILabEvaluationRepository, LabEvaluationRepository>();
         services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
         services.AddScoped<IRoleHierarchyScopeService, RoleHierarchyScopeService>();
 

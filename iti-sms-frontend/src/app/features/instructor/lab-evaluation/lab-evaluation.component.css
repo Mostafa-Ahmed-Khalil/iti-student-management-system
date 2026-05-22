@@ -1,0 +1,279 @@
+.eval-container {
+  padding: 1.5rem 2rem;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.eval-header {
+  margin-bottom: 1.5rem;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--p-primary-600);
+  font-weight: 500;
+  text-decoration: none;
+  margin-bottom: 0.75rem;
+  font-size: 0.875rem;
+}
+
+.back-link:hover { text-decoration: underline; }
+
+.header-info h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.header-info p {
+  margin: 0.25rem 0 0;
+  color: var(--p-text-muted-color);
+  font-size: 0.875rem;
+}
+
+.loading-state {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 4rem;
+  justify-content: center;
+  color: var(--p-text-muted-color);
+  font-size: 1.1rem;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 4rem;
+  color: var(--p-text-muted-color);
+  font-size: 1rem;
+}
+
+.empty-state .pi { font-size: 2.5rem; opacity: 0.3; }
+
+/* Spreadsheet Grid */
+.grid-wrapper {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.grid-scroll {
+  overflow: auto;
+  flex: 1;
+  border: 1px solid var(--p-surface-200);
+  border-radius: 10px;
+}
+
+.eval-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+  min-width: max-content;
+}
+
+.eval-table thead th {
+  position: sticky;
+  top: 0;
+  background: var(--p-surface-50);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--p-text-muted-color);
+  padding: 0.75rem 1rem;
+  border-bottom: 2px solid var(--p-surface-200);
+  white-space: nowrap;
+  z-index: 3;
+}
+
+.eval-table thead th.sticky-col,
+.eval-table tbody td.sticky-col {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  background: white;
+  border-right: 2px solid var(--p-surface-200);
+  min-width: 200px;
+}
+
+.eval-table thead th.sticky-col {
+  z-index: 4;
+  background: var(--p-surface-50);
+}
+
+.student-name {
+  padding: 0.75rem 1rem;
+  font-weight: 500;
+  font-size: 0.875rem;
+  white-space: nowrap;
+}
+
+.lab-col {
+  text-align: center;
+  min-width: 90px;
+}
+
+.eval-cell {
+  text-align: center;
+  padding: 0.5rem;
+  cursor: pointer;
+  transition: background 0.15s;
+  min-width: 90px;
+  height: 52px;
+}
+
+.eval-cell:hover {
+  background: var(--p-primary-50);
+}
+
+.eval-cell.evaluated {
+  background: #f0fdf4;
+}
+
+.eval-cell.score-0 .score-badge {
+  background: #fef2f2;
+  color: #dc2626;
+  border-color: #fecaca;
+}
+
+.eval-cell.score-1 .score-badge {
+  background: #f0fdf4;
+  color: #16a34a;
+  border-color: #bbf7d0;
+}
+
+.score-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  font-weight: 700;
+  font-size: 0.875rem;
+  border: 2px solid transparent;
+}
+
+.empty-cell {
+  color: #d1d5db;
+  font-size: 1.2rem;
+}
+
+.saving-spinner {
+  color: var(--p-primary-500);
+}
+
+/* Notes dialog */
+.notes-form {
+  padding-top: 0.5rem;
+}
+
+.score-field { margin-bottom: 1.5rem; }
+
+.score-field label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.score-toggles {
+  display: flex;
+  gap: 1rem;
+}
+
+.score-btn {
+  flex: 1;
+  padding: 0.75rem;
+  border: 2px solid var(--p-surface-300);
+  border-radius: 10px;
+  background: white;
+  font-size: 1.5rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: var(--p-surface-500);
+}
+
+.score-btn:hover {
+  border-color: var(--p-primary-400);
+  color: var(--p-primary-600);
+}
+
+.score-btn.active {
+  border-color: #dc2626;
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.score-btn.score-1.active {
+  border-color: #16a34a;
+  background: #f0fdf4;
+  color: #16a34a;
+}
+
+.tab-required {
+  color: #dc2626;
+  font-weight: 700;
+  margin-left: 2px;
+}
+
+.visible-badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  background: #dcfce7;
+  color: #16a34a;
+  margin-left: 0.5rem;
+  vertical-align: middle;
+}
+
+.private-badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  background: #fef9c3;
+  color: #a16207;
+  margin-left: 0.5rem;
+  vertical-align: middle;
+}
+
+.error-hint {
+  color: #dc2626;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+  display: block;
+}
+
+.field {
+  margin-bottom: 1rem;
+}
+
+.field label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 0.4rem;
+}
+
+.mt-3 { margin-top: 1rem; }
+.mr-1 { margin-right: 0.25rem; }
+
+.dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--p-surface-100);
+}

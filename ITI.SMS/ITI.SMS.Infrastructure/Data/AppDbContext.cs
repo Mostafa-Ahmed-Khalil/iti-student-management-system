@@ -19,6 +19,8 @@ public class AppDbContext : IdentityDbContext<
     public DbSet<Branch> Branches { get; set; }
     public DbSet<Track> Tracks { get; set; }
     public DbSet<Course> Courses { get; set; }
+    public DbSet<Enrollment> Enrollments { get; set; }
+    public DbSet<LabEvaluation> LabEvaluations { get; set; }
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
@@ -67,6 +69,42 @@ public class AppDbContext : IdentityDbContext<
             .WithMany()
             .HasForeignKey(c => c.InstructorId)
             .OnDelete(DeleteBehavior.SetNull);
+
+        builder.Entity<Enrollment>()
+            .HasOne(e => e.Track)
+            .WithMany()
+            .HasForeignKey(e => e.TrackId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<Enrollment>()
+            .HasOne(e => e.Student)
+            .WithMany()
+            .HasForeignKey(e => e.StudentId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<Enrollment>()
+            .HasIndex(e => new { e.TrackId, e.StudentId })
+            .IsUnique();
+
+        builder.Entity<LabEvaluation>()
+            .HasOne(le => le.Course)
+            .WithMany()
+            .HasForeignKey(le => le.CourseId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<LabEvaluation>()
+            .HasOne(le => le.Student)
+            .WithMany()
+            .HasForeignKey(le => le.StudentId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<LabEvaluation>()
+            .HasIndex(le => new { le.CourseId, le.StudentId, le.LabNumber })
+            .IsUnique();
+
+        builder.Entity<LabEvaluation>()
+            .Property(le => le.Score)
+            .HasPrecision(18, 2);
 
         // Map tables and columns to snake_case
         foreach (var entity in builder.Model.GetEntityTypes())

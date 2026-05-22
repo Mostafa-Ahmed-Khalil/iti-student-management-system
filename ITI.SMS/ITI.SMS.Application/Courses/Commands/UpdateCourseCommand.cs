@@ -26,6 +26,9 @@ public class UpdateCourseCommandHandler : IRequestHandler<UpdateCourseCommand>
 
     public async Task Handle(UpdateCourseCommand request, CancellationToken cancellationToken)
     {
+        if (string.IsNullOrEmpty(request.InstructorId))
+            throw new Common.Exceptions.ValidationException("An instructor must be assigned to the course.");
+
         var course = await _courseRepository.GetByIdAsync(request.Id, cancellationToken);
         if (course == null)
             throw new Common.Exceptions.NotFoundException($"Course with ID {request.Id} not found.");
