@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ITI.SMS.Tests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c5204aa253b5fe51facec3a8f276c86c17de533d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d89cc5a064bca908c1deae2e8f7840e6631e1179")]
 [assembly: System.Reflection.AssemblyProductAttribute("ITI.SMS.Tests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ITI.SMS.Tests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

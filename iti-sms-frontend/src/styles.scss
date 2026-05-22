@@ -1,0 +1,21 @@
+/* You can add global styles to this file, and also import other style files */
+:root {
+  --color-primary: #0969da;
+  --color-background: #f6f8fa;
+  --color-card-bg: #ffffff;
+  --color-success: #2da44e;
+  --color-warning: #bf8700;
+  --color-error: #cf222e;
+  --color-text-main: #24292f;
+  --color-text-muted: #57606a;
+  
+  --font-family-base: 'Inter', sans-serif;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-family-base);
+  background-color: var(--color-background);
+  color: var(--color-text-main);
+}

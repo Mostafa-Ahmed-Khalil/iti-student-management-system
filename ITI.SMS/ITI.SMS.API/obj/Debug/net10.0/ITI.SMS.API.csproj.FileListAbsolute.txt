@@ -178,4 +178,3 @@ C:\work\projects\iti-student-management-system\ITI.SMS\ITI.SMS.API\bin\Debug\net
 C:\work\projects\iti-student-management-system\ITI.SMS\ITI.SMS.API\bin\Debug\net10.0\MediatR.dll
 C:\work\projects\iti-student-management-system\ITI.SMS\ITI.SMS.API\bin\Debug\net10.0\MediatR.Contracts.dll
 C:\work\projects\iti-student-management-system\ITI.SMS\ITI.SMS.API\bin\Debug\net10.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
-C:\work\projects\iti-student-management-system\ITI.SMS\ITI.SMS.API\obj\Debug\net10.0\staticwebassets.upToDateCheck.txt

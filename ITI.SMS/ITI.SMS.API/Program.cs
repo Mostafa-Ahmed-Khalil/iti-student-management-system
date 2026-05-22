@@ -22,7 +22,13 @@ try
         .ReadFrom.Services(services));
 
     // Add services to the container.
-    builder.Services.AddControllers();
+    builder.Services.AddControllers(options => 
+    {
+        var policy = new Microsoft.AspNetCore.Authorization.AuthorizationPolicyBuilder()
+                            .RequireAuthenticatedUser()
+                            .Build();
+        options.Filters.Add(new Microsoft.AspNetCore.Mvc.Authorization.AuthorizeFilter(policy));
+    });
     
     builder.Services.AddOpenApi(options =>
     {
@@ -115,6 +121,7 @@ try
     app.UseHttpsRedirection();
     app.UseAuthentication();
     app.UseAuthorization();
+    app.UseMiddleware<RoleHierarchyScopeMiddleware>();
     app.MapControllers();
 
     // Weather forecast endpoint kept for validation or default startup

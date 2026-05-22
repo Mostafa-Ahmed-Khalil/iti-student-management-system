@@ -1,0 +1,26 @@
+<div class="app-shell">
+  <header class="app-header">
+    <div class="logo">ITI Student Management System</div>
+    
+    <div class="user-controls" *ngIf="authStore.isLoggedIn()">
+      <div class="role-switcher">
+        <span>Viewing as:</span>
+        <select *ngIf="authStore.allRoles().length > 1; else singleRole" 
+                [value]="authStore.activeRole()" 
+                (change)="switchRole($event)"
+                class="role-select">
+          <option *ngFor="let role of authStore.allRoles()" [value]="role">{{ role }}</option>
+        </select>
+        <ng-template #singleRole>
+          <span class="role-badge">{{ authStore.activeRole() }}</span>
+        </ng-template>
+      </div>
+      
+      <button class="btn btn-outline" (click)="logout()">Logout</button>
+    </div>
+  </header>
+  
+  <main class="app-content">
+    <router-outlet></router-outlet>
+  </main>
+</div>
