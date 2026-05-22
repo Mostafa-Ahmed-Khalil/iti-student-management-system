@@ -2,6 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { RouterOutlet, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthStore } from './core/auth/auth.store';
+import { ToastService } from './core/toast.service';
 
 @Component({
   selector: 'app-root',
@@ -12,6 +13,7 @@ import { AuthStore } from './core/auth/auth.store';
 })
 export class AppComponent implements OnInit {
   authStore = inject(AuthStore);
+  toastService = inject(ToastService);
   private router = inject(Router);
 
   ngOnInit() {

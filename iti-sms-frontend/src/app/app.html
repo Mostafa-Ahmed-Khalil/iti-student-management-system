@@ -23,4 +23,11 @@
   <main class="app-content">
     <router-outlet></router-outlet>
   </main>
+
+  <div class="toast-container" *ngIf="toastService.toasts().length > 0">
+    <div *ngFor="let toast of toastService.toasts()" class="toast" [ngClass]="'toast-' + toast.type">
+      {{ toast.message }}
+      <button class="toast-close" (click)="toastService.remove(toast.id)">&times;</button>
+    </div>
+  </div>
 </div>
