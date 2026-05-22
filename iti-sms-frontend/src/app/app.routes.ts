@@ -32,6 +32,12 @@ export const routes: Routes = [
     canActivate: [roleGuard],
     data: { roles: ['Branch Manager'] }
   },
+  {
+    path: 'supervisor',
+    loadChildren: () => import('./features/supervisor/supervisor.routes').then(m => m.SUPERVISOR_ROUTES),
+    canActivate: [roleGuard],
+    data: { roles: ['Technical Supervisor'] }
+  },
 
   { 
     path: '', 

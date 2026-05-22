@@ -1,0 +1,97 @@
+<div class="management-container">
+  <div class="back-link mb-3">
+    <a routerLink="/supervisor/tracks" class="p-button p-button-link"><i class="pi pi-arrow-left"></i> Back to Tracks</a>
+  </div>
+
+  <p-card styleClass="premium-card">
+    <div class="header-row">
+      <div class="title-section">
+        <h2>Course Management</h2>
+        <p>Manage courses for the selected track.</p>
+      </div>
+      <p-button label="Add Course" icon="pi pi-plus" (onClick)="openAddModal()"></p-button>
+    </div>
+
+    <p-table [value]="courses()" [loading]="isLoading()" dataKey="id" [paginator]="true" [rows]="10" styleClass="p-datatable-striped">
+      <ng-template #header>
+        <tr>
+          <th>Name</th>
+          <th>Instructor</th>
+          <th>Lectures</th>
+          <th>Labs</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </ng-template>
+      <ng-template #body let-course>
+        <tr>
+          <td class="font-medium">{{ course.name }}</td>
+          <td>{{ course.instructorName || 'Unassigned' }}</td>
+          <td>{{ course.numberOfLectures }} ({{ course.lectureHours }}h)</td>
+          <td>{{ course.numberOfLabs }} ({{ course.labHours }}h)</td>
+          <td>
+            <span [class]="'status-badge ' + (course.isActive ? 'status-active' : 'status-inactive')">
+              {{ course.isActive ? 'Active' : 'Inactive' }}
+            </span>
+          </td>
+          <td class="actions-cell">
+            <p-button icon="pi pi-pencil" size="small" variant="outlined" (onClick)="openEditModal(course)"></p-button>
+            <p-button icon="pi pi-times" size="small" severity="danger" *ngIf="course.isActive" (onClick)="deactivateCourse(course)"></p-button>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template #empty>
+        <tr>
+          <td colspan="6" class="empty-message">No courses found for this track.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-card>
+</div>
+
+<p-dialog [header]="modalTitle()" [(visible)]="isModalOpen" [modal]="true" [style]="{ width: '480px' }" [draggable]="false" [resizable]="false">
+  <form [formGroup]="courseForm" (ngSubmit)="saveCourse()" class="form-container">
+    <div class="p-fluid">
+
+      <div class="field">
+        <label for="name">Course Name</label>
+        <input id="name" type="text" pInputText formControlName="name" placeholder="Enter course name" />
+      </div>
+
+      <div class="field">
+        <label for="instructorId">Instructor</label>
+        <p-select
+          id="instructorId"
+          [options]="instructors()"
+          formControlName="instructorId"
+          optionLabel="fullName"
+          optionValue="id"
+          [filter]="true"
+          filterBy="fullName,email"
+          placeholder="Select an Instructor"
+          [showClear]="true">
+        </p-select>
+      </div>
+
+      <div class="field">
+        <label for="lectureHours">Lecture Hours</label>
+        <p-inputNumber id="lectureHours" formControlName="lectureHours" [min]="0"></p-inputNumber>
+      </div>
+
+      <div class="field">
+        <label for="labHours">Lab Hours</label>
+        <p-inputNumber id="labHours" formControlName="labHours" [min]="0"></p-inputNumber>
+      </div>
+
+      <div class="hint-text">
+        <small><i class="pi pi-info-circle"></i> 3 hours map to 1 lecture/lab.</small>
+      </div>
+
+    </div>
+
+    <div class="dialog-footer">
+      <p-button label="Cancel" icon="pi pi-times" variant="text" (onClick)="closeModal()" type="button" [disabled]="isSaving()"></p-button>
+      <p-button label="Save" icon="pi pi-check" type="submit" [loading]="isSaving()" [disabled]="courseForm.invalid || isSaving()"></p-button>
+    </div>
+  </form>
+</p-dialog>

@@ -11,18 +11,27 @@ using Microsoft.AspNetCore.Authorization;
 [Authorize]
 public class UsersController : ApiControllerBase
 {
-    [AuthorizeRole("Admin", "Branch Manager")]
+    [AuthorizeRole("Admin", "Branch Manager", "Technical Supervisor")]
     [HttpGet]
-    public async Task<IActionResult> GetUsers([FromQuery] int page = 1, [FromQuery] int pageSize = 50, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> GetUsers([FromQuery] int page = 1, [FromQuery] int pageSize = 50, [FromQuery] string? role = null, CancellationToken cancellationToken = default)
     {
-        var result = await Mediator.Send(new GetUsersQuery { Page = page, PageSize = pageSize }, cancellationToken);
+        var result = await Mediator.Send(new GetUsersQuery { Page = page, PageSize = pageSize, Role = role }, cancellationToken);
         return Success(result, "Users retrieved successfully.");
     }
 
-    [AuthorizeRole("Admin")]
+    [AuthorizeRole("Admin", "Technical Supervisor")]
     [HttpPost]
     public async Task<IActionResult> CreateUser([FromBody] CreateUserCommand command, CancellationToken cancellationToken)
     {
+        var isSupervisor = User.IsInRole("Technical Supervisor") && !User.IsInRole("Admin");
+        if (isSupervisor)
+        {
+            if (command.Roles.Count == 0 || command.Roles.Any(r => r != "Student"))
+            {
+                return Forbid();
+            }
+        }
+
         var result = await Mediator.Send(command, cancellationToken);
         
         return CreatedAtAction(nameof(GetUsers), new { id = result.Id }, new ApiResponse<UserDto>

@@ -12,10 +12,14 @@ export class UserService {
   private readonly http = inject(HttpClient);
   private readonly apiUrl = `${environment.apiBaseUrl}/users`;
 
-  getUsers(page: number = 1, pageSize: number = 50): Observable<User[]> {
+  getUsers(page: number = 1, pageSize: number = 50, role?: string): Observable<User[]> {
     let params = new HttpParams()
       .set('page', page.toString())
       .set('pageSize', pageSize.toString());
+
+    if (role) {
+      params = params.set('role', role);
+    }
 
     return this.http.get<ApiResponse<User[]>>(this.apiUrl, { params }).pipe(
       map(response => response.data)

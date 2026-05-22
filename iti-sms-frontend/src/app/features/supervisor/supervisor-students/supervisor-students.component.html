@@ -1,0 +1,73 @@
+<div class="management-container">
+  <p-card styleClass="premium-card">
+    <div class="header-row">
+      <div class="title-section">
+        <h2>Students</h2>
+        <p>Manage all students enrolled in the system.</p>
+      </div>
+      <p-button label="Add Student" icon="pi pi-plus" (onClick)="openAddModal()"></p-button>
+    </div>
+
+    <p-table [value]="students()" [loading]="isLoading()" dataKey="id" [paginator]="true" [rows]="10" styleClass="p-datatable-striped">
+      <ng-template #header>
+        <tr>
+          <th>Full Name</th>
+          <th>Email</th>
+          <th>Roles</th>
+        </tr>
+      </ng-template>
+      <ng-template #body let-student>
+        <tr>
+          <td class="font-medium">{{ student.fullName }}</td>
+          <td>{{ student.email }}</td>
+          <td>
+            <span class="role-badge" *ngFor="let role of student.roles">{{ role }}</span>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template #empty>
+        <tr>
+          <td colspan="3" class="empty-message">No students found.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-card>
+</div>
+
+<p-dialog header="Add Student" [(visible)]="isModalOpen" [modal]="true" [style]="{ width: '480px' }" [draggable]="false" [resizable]="false">
+  <form [formGroup]="studentForm" (ngSubmit)="saveStudent()" class="form-container">
+    <div class="p-fluid">
+
+      <div class="field">
+        <label for="fullName">Full Name</label>
+        <input id="fullName" type="text" pInputText formControlName="fullName" />
+      </div>
+
+      <div class="field">
+        <label for="email" class="auto-label">
+          Email
+          <span class="auto-badge" pTooltip="Auto-generated from name" tooltipPosition="top">
+            <i class="pi pi-bolt"></i> Auto
+          </span>
+        </label>
+        <input id="email" type="text" pInputText formControlName="email" readonly class="auto-input" />
+      </div>
+
+      <div class="field">
+        <label for="password" class="auto-label">
+          Password
+          <span class="auto-badge" pTooltip="Auto-generated from name" tooltipPosition="top">
+            <i class="pi pi-bolt"></i> Auto
+          </span>
+        </label>
+        <p-password id="password" formControlName="password" [toggleMask]="true" [feedback]="false" [inputStyle]="{'background':'var(--auto-input-bg)'}"></p-password>
+      </div>
+
+    </div>
+
+    <div class="dialog-footer">
+      <p-button label="Cancel" icon="pi pi-times" variant="text" (onClick)="closeModal()" type="button" [disabled]="isSaving()"></p-button>
+      <p-button label="Create Student" icon="pi pi-user-plus" type="submit" [loading]="isSaving()" [disabled]="studentForm.get('fullName')?.invalid || isSaving()"></p-button>
+    </div>
+  </form>
+</p-dialog>

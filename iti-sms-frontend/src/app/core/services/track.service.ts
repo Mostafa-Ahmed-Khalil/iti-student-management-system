@@ -21,6 +21,10 @@ export class TrackService {
     return this.http.get<ApiResponse<any>>(`${this.apiUrl}/users/me/branch`);
   }
 
+  getMyTracks(): Observable<ApiResponse<Track[]>> {
+    return this.http.get<ApiResponse<Track[]>>(`${this.apiUrl}/tracks/me`);
+  }
+
   getTracksByBranch(branchId: number): Observable<ApiResponse<Track[]>> {
     return this.http.get<ApiResponse<Track[]>>(`${this.apiUrl}/branches/${branchId}/tracks`);
   }

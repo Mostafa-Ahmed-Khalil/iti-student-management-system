@@ -16,8 +16,9 @@ public class AppDbContext : IdentityDbContext<
     IdentityRoleClaim<string>, 
     IdentityUserToken<string>>
 {
-    public DbSet<Branch> Branches => Set<Branch>();
-    public DbSet<Track> Tracks => Set<Track>();
+    public DbSet<Branch> Branches { get; set; }
+    public DbSet<Track> Tracks { get; set; }
+    public DbSet<Course> Courses { get; set; }
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
@@ -53,6 +54,18 @@ public class AppDbContext : IdentityDbContext<
             .HasOne(t => t.Supervisor)
             .WithMany()
             .HasForeignKey(t => t.SupervisorId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        builder.Entity<Course>()
+            .HasOne(c => c.Track)
+            .WithMany(t => t.Courses)
+            .HasForeignKey(c => c.TrackId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<Course>()
+            .HasOne(c => c.Instructor)
+            .WithMany()
+            .HasForeignKey(c => c.InstructorId)
             .OnDelete(DeleteBehavior.SetNull);
 
         // Map tables and columns to snake_case

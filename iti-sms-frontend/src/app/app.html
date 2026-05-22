@@ -11,6 +11,11 @@
       <nav class="main-nav" *ngIf="authStore.activeRole() === 'Branch Manager'">
         <a routerLink="/branch-manager/tracks" routerLinkActive="active">Tracks</a>
       </nav>
+
+      <nav class="main-nav" *ngIf="authStore.activeRole() === 'Technical Supervisor'">
+        <a routerLink="/supervisor/tracks" routerLinkActive="active">My Tracks</a>
+        <a routerLink="/supervisor/students" routerLinkActive="active">Students</a>
+      </nav>
     </ng-template>
     
     <ng-template #end>

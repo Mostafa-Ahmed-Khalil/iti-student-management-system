@@ -174,6 +174,60 @@ namespace ITI.SMS.Infrastructure.Migrations
                     b.ToTable("branches");
                 });
 
+            modelBuilder.Entity("ITI.SMS.Domain.Entities.Course", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("InstructorId")
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("instructor_id");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit")
+                        .HasColumnName("is_active");
+
+                    b.Property<int>("LabHours")
+                        .HasColumnType("int")
+                        .HasColumnName("lab_hours");
+
+                    b.Property<int>("LectureHours")
+                        .HasColumnType("int")
+                        .HasColumnName("lecture_hours");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("name");
+
+                    b.Property<int>("TrackId")
+                        .HasColumnType("int")
+                        .HasColumnName("track_id");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("updated_at");
+
+                    b.HasKey("Id")
+                        .HasName("p_k_courses");
+
+                    b.HasIndex("InstructorId")
+                        .HasDatabaseName("i_x_courses_instructor_id");
+
+                    b.HasIndex("TrackId")
+                        .HasDatabaseName("i_x_courses_track_id");
+
+                    b.ToTable("courses");
+                });
+
             modelBuilder.Entity("ITI.SMS.Domain.Entities.Track", b =>
                 {
                     b.Property<int>("Id")
@@ -368,6 +422,26 @@ namespace ITI.SMS.Infrastructure.Migrations
                     b.Navigation("Manager");
                 });
 
+            modelBuilder.Entity("ITI.SMS.Domain.Entities.Course", b =>
+                {
+                    b.HasOne("ITI.SMS.Domain.Entities.ApplicationUser", "Instructor")
+                        .WithMany()
+                        .HasForeignKey("InstructorId")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .HasConstraintName("f_k_courses_users_instructor_id");
+
+                    b.HasOne("ITI.SMS.Domain.Entities.Track", "Track")
+                        .WithMany("Courses")
+                        .HasForeignKey("TrackId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("f_k_courses__tracks_track_id");
+
+                    b.Navigation("Instructor");
+
+                    b.Navigation("Track");
+                });
+
             modelBuilder.Entity("ITI.SMS.Domain.Entities.Track", b =>
                 {
                     b.HasOne("ITI.SMS.Domain.Entities.Branch", "Branch")
@@ -462,6 +536,11 @@ namespace ITI.SMS.Infrastructure.Migrations
             modelBuilder.Entity("ITI.SMS.Domain.Entities.Branch", b =>
                 {
                     b.Navigation("Tracks");
+                });
+
+            modelBuilder.Entity("ITI.SMS.Domain.Entities.Track", b =>
+                {
+                    b.Navigation("Courses");
                 });
 #pragma warning restore 612, 618
         }

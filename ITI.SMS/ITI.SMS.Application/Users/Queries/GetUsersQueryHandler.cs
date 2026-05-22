@@ -18,23 +18,36 @@ public class GetUsersQueryHandler : IRequestHandler<GetUsersQuery, IEnumerable<U
 
     public async Task<IEnumerable<UserDto>> Handle(GetUsersQuery request, CancellationToken cancellationToken)
     {
-        var usersWithRoles = _userManager.Users
-            .Skip((request.Page - 1) * request.PageSize)
-            .Take(request.PageSize)
-            .Select(u => new
-            {
-                User = u,
-                Roles = u.UserRoles.Select(ur => ur.Role.Name!).ToList()
-            })
-            .ToList();
+        IList<ApplicationUser> users;
 
-        var userDtos = usersWithRoles.Select(u => new UserDto
+        if (!string.IsNullOrEmpty(request.Role))
         {
-            Id = u.User.Id,
-            Email = u.User.Email!,
-            FullName = u.User.FullName ?? string.Empty,
-            Roles = u.Roles
-        }).ToList();
+            users = await _userManager.GetUsersInRoleAsync(request.Role);
+            users = users
+                .Skip((request.Page - 1) * request.PageSize)
+                .Take(request.PageSize)
+                .ToList();
+        }
+        else
+        {
+            users = _userManager.Users
+                .Skip((request.Page - 1) * request.PageSize)
+                .Take(request.PageSize)
+                .ToList();
+        }
+
+        var userDtos = new List<UserDto>();
+        foreach (var user in users)
+        {
+            var roles = await _userManager.GetRolesAsync(user);
+            userDtos.Add(new UserDto
+            {
+                Id = user.Id,
+                Email = user.Email!,
+                FullName = user.FullName ?? string.Empty,
+                Roles = roles.ToList()
+            });
+        }
 
         return userDtos;
     }

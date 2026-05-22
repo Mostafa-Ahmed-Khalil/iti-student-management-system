@@ -7,4 +7,5 @@ public class GetUsersQuery : IRequest<IEnumerable<UserDto>>
 {
     public int Page { get; set; } = 1;
     public int PageSize { get; set; } = 50;
+    public string? Role { get; set; }
 }

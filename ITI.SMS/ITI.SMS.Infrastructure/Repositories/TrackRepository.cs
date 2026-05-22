@@ -28,6 +28,14 @@ public class TrackRepository : ITrackRepository
             .ToListAsync(cancellationToken);
     }
 
+    public async Task<IEnumerable<Track>> GetBySupervisorIdAsync(string supervisorId, CancellationToken cancellationToken = default)
+    {
+        return await _context.Tracks
+            .Include(t => t.Supervisor)
+            .Where(t => t.SupervisorId == supervisorId)
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task<Track> AddAsync(Track track, CancellationToken cancellationToken = default)
     {
         await _context.Tracks.AddAsync(track, cancellationToken);

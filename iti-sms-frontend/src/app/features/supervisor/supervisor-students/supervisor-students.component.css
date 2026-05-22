@@ -1,0 +1,106 @@
+.management-container {
+  padding: 2rem;
+}
+
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.title-section h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.title-section p {
+  margin: 0.5rem 0 0;
+  color: var(--text-secondary);
+}
+
+.empty-message {
+  text-align: center;
+  padding: 3rem !important;
+  color: var(--text-secondary);
+}
+
+.form-container {
+  padding-top: 0.5rem;
+}
+
+.field {
+  margin-bottom: 1.5rem;
+}
+
+.field label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+/* Label with auto-badge inline */
+.auto-label {
+  display: flex !important;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.auto-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: white;
+  letter-spacing: 0.02em;
+  cursor: help;
+}
+
+.auto-badge .pi {
+  font-size: 0.65rem;
+}
+
+/* Read-only "auto" input styling */
+.auto-input,
+:host ::ng-deep .auto-password input {
+  background-color: #f8fafc !important;
+  color: #374151 !important;
+  cursor: default !important;
+  border-color: #e2e8f0 !important;
+  font-size: 0.875rem !important;
+}
+
+/* Override PrimeNG password field to match read-only style */
+:host ::ng-deep p-password input {
+  background-color: #f8fafc !important;
+  border-color: #e2e8f0 !important;
+  font-size: 0.875rem;
+  width: 100%;
+}
+
+.dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--p-surface-200);
+}
+
+.role-badge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background-color: var(--p-primary-50, #eff6ff);
+  color: var(--p-primary-600, #2563eb);
+  margin-right: 0.25rem;
+}

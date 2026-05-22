@@ -153,6 +153,43 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "ITI.SMS.API.Controllers.CoursesController",
+    "Method": "UpdateCourse",
+    "RelativePath": "api/v1/Courses/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "command",
+        "Type": "ITI.SMS.Application.Courses.Commands.UpdateCourseCommand",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ITI.SMS.API.Controllers.CoursesController",
+    "Method": "DeleteCourse",
+    "RelativePath": "api/v1/Courses/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "ITI.SMS.API.Controllers.TracksController",
     "Method": "UpdateTrack",
     "RelativePath": "api/v1/Tracks/{id}",
@@ -190,6 +227,53 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "ITI.SMS.API.Controllers.TracksController",
+    "Method": "GetCourses",
+    "RelativePath": "api/v1/Tracks/{trackId}/courses",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "trackId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ITI.SMS.API.Controllers.TracksController",
+    "Method": "CreateCourse",
+    "RelativePath": "api/v1/Tracks/{trackId}/courses",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "trackId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "command",
+        "Type": "ITI.SMS.Application.Courses.Commands.CreateCourseCommand",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ITI.SMS.API.Controllers.TracksController",
+    "Method": "GetMyTracks",
+    "RelativePath": "api/v1/Tracks/me",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "ITI.SMS.API.Controllers.UsersController",
     "Method": "GetUsers",
     "RelativePath": "api/v1/Users",
@@ -205,6 +289,11 @@
       {
         "Name": "pageSize",
         "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "role",
+        "Type": "System.String",
         "IsRequired": false
       }
     ],

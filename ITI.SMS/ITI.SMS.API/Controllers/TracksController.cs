@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ITI.SMS.API.Controllers;
 
-[AuthorizeRole("Branch Manager")]
+[AuthorizeRole("Branch Manager", "Admin", "Technical Supervisor")]
 public class TracksController : ApiControllerBase
 {
     [HttpPut("{id}")]
@@ -15,10 +15,45 @@ public class TracksController : ApiControllerBase
     }
 
     [HttpDelete("{id}")]
+    [AuthorizeRole("Branch Manager", "Admin")]
     public async Task<IActionResult> DeleteTrack(int id, CancellationToken cancellationToken)
     {
         await Mediator.Send(new DeleteTrackCommand(id), cancellationToken);
         return Success<object?>(null, "Track deactivated successfully.");
+    }
+
+    [HttpGet("me")]
+    [AuthorizeRole("Technical Supervisor")]
+    public async Task<IActionResult> GetMyTracks(CancellationToken cancellationToken)
+    {
+        var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(userId)) return Unauthorized();
+
+        var result = await Mediator.Send(new ITI.SMS.Application.Tracks.Queries.GetMyTracksQuery(userId), cancellationToken);
+        return Success(result, "Tracks retrieved successfully.");
+    }
+
+    [HttpGet("{trackId}/courses")]
+    [AuthorizeRole("Technical Supervisor", "Branch Manager", "Admin")]
+    public async Task<IActionResult> GetCourses(int trackId, CancellationToken cancellationToken)
+    {
+        var result = await Mediator.Send(new ITI.SMS.Application.Courses.Queries.GetCoursesByTrackQuery(trackId), cancellationToken);
+        return Success(result, "Courses retrieved successfully.");
+    }
+
+    [HttpPost("{trackId}/courses")]
+    [AuthorizeRole("Technical Supervisor")]
+    public async Task<IActionResult> CreateCourse(int trackId, [FromBody] ITI.SMS.Application.Courses.Commands.CreateCourseCommand command, CancellationToken cancellationToken)
+    {
+        command.TrackId = trackId;
+        var result = await Mediator.Send(command, cancellationToken);
+        
+        return CreatedAtAction(nameof(GetCourses), new { trackId = trackId }, new ApiResponse<ITI.SMS.Application.Courses.DTOs.CourseDto>
+        {
+            Success = true,
+            Data = result,
+            Message = "Course created successfully."
+        });
     }
 }
 

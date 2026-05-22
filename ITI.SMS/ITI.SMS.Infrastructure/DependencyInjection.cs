@@ -39,6 +39,7 @@ public static class DependencyInjection
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IBranchRepository, BranchRepository>();
         services.AddScoped<ITrackRepository, TrackRepository>();
+        services.AddScoped<ICourseRepository, CourseRepository>();
         services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
         services.AddScoped<IRoleHierarchyScopeService, RoleHierarchyScopeService>();
 
