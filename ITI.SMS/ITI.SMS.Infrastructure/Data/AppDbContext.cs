@@ -19,6 +19,7 @@ public class AppDbContext : IdentityDbContext<
     public DbSet<Branch> Branches { get; set; }
     public DbSet<Track> Tracks { get; set; }
     public DbSet<Course> Courses { get; set; }
+    public DbSet<CourseLabAssistant> CourseLabAssistants { get; set; }
     public DbSet<Enrollment> Enrollments { get; set; }
     public DbSet<LabEvaluation> LabEvaluations { get; set; }
 
@@ -65,10 +66,25 @@ public class AppDbContext : IdentityDbContext<
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.Entity<Course>()
-            .HasOne(c => c.Instructor)
+            .HasOne(c => c.Lecturer)
             .WithMany()
-            .HasForeignKey(c => c.InstructorId)
+            .HasForeignKey(c => c.LecturerId)
             .OnDelete(DeleteBehavior.SetNull);
+
+        builder.Entity<CourseLabAssistant>()
+            .HasKey(cla => new { cla.CourseId, cla.InstructorId });
+
+        builder.Entity<CourseLabAssistant>()
+            .HasOne(cla => cla.Course)
+            .WithMany(c => c.CourseLabAssistants)
+            .HasForeignKey(cla => cla.CourseId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<CourseLabAssistant>()
+            .HasOne(cla => cla.Instructor)
+            .WithMany()
+            .HasForeignKey(cla => cla.InstructorId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.Entity<Enrollment>()
             .HasOne(e => e.Track)
@@ -101,6 +117,12 @@ public class AppDbContext : IdentityDbContext<
         builder.Entity<LabEvaluation>()
             .HasIndex(le => new { le.CourseId, le.StudentId, le.LabNumber })
             .IsUnique();
+
+        builder.Entity<LabEvaluation>()
+            .HasOne(le => le.Evaluator)
+            .WithMany()
+            .HasForeignKey(le => le.EvaluatorId)
+            .OnDelete(DeleteBehavior.NoAction);
 
         builder.Entity<LabEvaluation>()
             .Property(le => le.Score)

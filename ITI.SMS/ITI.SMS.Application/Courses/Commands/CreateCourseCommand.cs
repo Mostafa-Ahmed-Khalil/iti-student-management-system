@@ -9,7 +9,8 @@ public class CreateCourseCommand : IRequest<CourseDto>
 {
     public string Name { get; set; } = string.Empty;
     public int TrackId { get; set; }
-    public string? InstructorId { get; set; }
+    public string? LecturerId { get; set; }
+    public List<string> LabAssistantIds { get; set; } = new();
     public int LectureHours { get; set; }
     public int LabHours { get; set; }
 }
@@ -27,18 +28,19 @@ public class CreateCourseCommandHandler : IRequestHandler<CreateCourseCommand, C
 
     public async Task<CourseDto> Handle(CreateCourseCommand request, CancellationToken cancellationToken)
     {
-        if (string.IsNullOrEmpty(request.InstructorId))
-            throw new Common.Exceptions.ValidationException("An instructor must be assigned to the course.");
+        if (string.IsNullOrEmpty(request.LecturerId))
+            throw new Common.Exceptions.ValidationException("A lecturer must be assigned to the course.");
 
         var course = new Course
         {
             Name = request.Name,
             TrackId = request.TrackId,
-            InstructorId = string.IsNullOrEmpty(request.InstructorId) ? null : request.InstructorId,
+            LecturerId = string.IsNullOrEmpty(request.LecturerId) ? null : request.LecturerId,
             LectureHours = request.LectureHours,
             LabHours = request.LabHours,
             IsActive = true,
-            CreatedAt = DateTime.UtcNow
+            CreatedAt = DateTime.UtcNow,
+            CourseLabAssistants = request.LabAssistantIds.Select(id => new CourseLabAssistant { InstructorId = id }).ToList()
         };
 
         await _courseRepository.AddAsync(course, cancellationToken);
@@ -49,7 +51,9 @@ public class CreateCourseCommandHandler : IRequestHandler<CreateCourseCommand, C
             Id = course.Id,
             Name = course.Name,
             TrackId = course.TrackId,
-            InstructorId = course.InstructorId,
+            LecturerId = course.LecturerId,
+            // LabAssistants are populated from DB or empty initially for DTO
+            LabAssistants = new List<InstructorDto>(),
             LectureHours = course.LectureHours,
             LabHours = course.LabHours,
             NumberOfLectures = course.NumberOfLectures,

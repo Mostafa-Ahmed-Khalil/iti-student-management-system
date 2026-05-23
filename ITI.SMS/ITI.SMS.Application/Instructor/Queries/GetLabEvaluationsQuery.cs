@@ -12,6 +12,8 @@ public class LabEvaluationDto
     public decimal Score { get; set; }
     public string TechNotes { get; set; } = string.Empty;
     public string? SoftSkillsNotes { get; set; }  // null when caller is Student
+    public string? EvaluatorId { get; set; }
+    public string? EvaluatorName { get; set; }
 }
 
 public class LabEvaluationGridDto
@@ -68,7 +70,9 @@ public class GetLabEvaluationsQueryHandler : IRequestHandler<GetLabEvaluationsQu
                 Score = le.Score,
                 TechNotes = le.TechNotes,
                 // Strip soft skills notes if caller is not an Instructor
-                SoftSkillsNotes = request.IsInstructor ? le.SoftSkillsNotes : null
+                SoftSkillsNotes = request.IsInstructor ? le.SoftSkillsNotes : null,
+                EvaluatorId = request.IsInstructor ? le.EvaluatorId : null,
+                EvaluatorName = request.IsInstructor ? (le.Evaluator != null ? (le.Evaluator.FullName ?? le.Evaluator.Email) : null) : null
             }).ToList()
         };
     }

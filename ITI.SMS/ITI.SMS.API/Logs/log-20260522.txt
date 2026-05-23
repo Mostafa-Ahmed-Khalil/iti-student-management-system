@@ -225,3 +225,4 @@ ITI.SMS.Application.Common.Exceptions.ValidationException: Student is already en
 2026-05-22 20:53:15.853 +03:00 [WRN] No store type was specified for the decimal property 'Score' on entity type 'LabEvaluation'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
 2026-05-22 20:56:13.189 +03:00 [WRN] Failed to determine the https port for redirect.
 2026-05-22 21:01:10.484 +03:00 [WRN] Failed to determine the https port for redirect.
+2026-05-22 21:19:37.718 +03:00 [WRN] Failed to determine the https port for redirect.

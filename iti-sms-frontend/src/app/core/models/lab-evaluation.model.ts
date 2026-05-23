@@ -6,6 +6,8 @@ export interface LabEvaluationDto {
   score: number;
   techNotes: string;
   softSkillsNotes?: string | null;
+  evaluatorId?: string;
+  evaluatorName?: string;
 }
 
 export interface LabEvaluationGridDto {

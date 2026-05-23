@@ -15,18 +15,29 @@
     <p-table [value]="courses()" [loading]="isLoading()" dataKey="id" [paginator]="true" [rows]="10" styleClass="p-datatable-striped">
       <ng-template #header>
         <tr>
+          <th style="width: 3rem">#</th>
           <th>Name</th>
-          <th>Instructor</th>
+          <th>Lecturer</th>
+          <th>Lab Assistants</th>
           <th>Lectures</th>
           <th>Labs</th>
           <th>Status</th>
           <th>Actions</th>
         </tr>
       </ng-template>
-      <ng-template #body let-course>
+      <ng-template #body let-course let-rowIndex="rowIndex">
         <tr>
+          <td>{{ rowIndex + 1 }}</td>
           <td class="font-medium">{{ course.name }}</td>
-          <td>{{ course.instructorName || 'Unassigned' }}</td>
+          <td>{{ course.lecturerName || 'Unassigned' }}</td>
+          <td>
+            <ng-container *ngIf="course.labAssistants?.length; else noAssistants">
+              <span *ngFor="let assistant of course.labAssistants; let last = last">
+                {{ assistant.name }}{{ !last ? ', ' : '' }}
+              </span>
+            </ng-container>
+            <ng-template #noAssistants>None</ng-template>
+          </td>
           <td>{{ course.numberOfLectures }} ({{ course.lectureHours }}h)</td>
           <td>{{ course.numberOfLabs }} ({{ course.labHours }}h)</td>
           <td>
@@ -59,18 +70,33 @@
       </div>
 
       <div class="field">
-        <label for="instructorId">Instructor</label>
+        <label for="lecturerId">Lecturer</label>
         <p-select
-          id="instructorId"
+          id="lecturerId"
           [options]="instructors()"
-          formControlName="instructorId"
+          formControlName="lecturerId"
           optionLabel="fullName"
           optionValue="id"
           [filter]="true"
           filterBy="fullName,email"
-          placeholder="Select an Instructor"
+          placeholder="Select a Lecturer"
           [showClear]="true">
         </p-select>
+      </div>
+
+      <div class="field">
+        <label for="labAssistantIds">Lab Assistants</label>
+        <p-multiSelect
+          id="labAssistantIds"
+          [options]="instructors()"
+          formControlName="labAssistantIds"
+          optionLabel="fullName"
+          optionValue="id"
+          [filter]="true"
+          filterBy="fullName,email"
+          placeholder="Select Lab Assistants"
+          [showClear]="true">
+        </p-multiSelect>
       </div>
 
       <div class="field">

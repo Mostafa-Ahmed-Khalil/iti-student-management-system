@@ -33,7 +33,11 @@ public class CoursesController : ApiControllerBase
     [HttpPut("{courseId}/evaluations")]
     public async Task<IActionResult> UpsertLabEvaluation(int courseId, [FromBody] UpsertLabEvaluationCommand command, CancellationToken cancellationToken)
     {
+        var instructorId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(instructorId)) return Unauthorized();
+
         command.CourseId = courseId;
+        command.EvaluatorId = instructorId;
         await Mediator.Send(command, cancellationToken);
         return Success<object?>(null, "Evaluation saved successfully.");
     }

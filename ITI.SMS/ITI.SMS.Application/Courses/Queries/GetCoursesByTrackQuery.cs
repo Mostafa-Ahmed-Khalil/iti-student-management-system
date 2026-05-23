@@ -24,8 +24,13 @@ public class GetCoursesByTrackQueryHandler : IRequestHandler<GetCoursesByTrackQu
             Id = c.Id,
             Name = c.Name,
             TrackId = c.TrackId,
-            InstructorId = c.InstructorId,
-            InstructorName = c.Instructor != null ? (c.Instructor.FullName ?? c.Instructor.Email) : null,
+            LecturerId = c.LecturerId,
+            LecturerName = c.Lecturer != null ? (c.Lecturer.FullName ?? c.Lecturer.Email) : null,
+            LabAssistants = c.CourseLabAssistants.Select(la => new InstructorDto
+            {
+                Id = la.InstructorId,
+                Name = la.Instructor.FullName ?? la.Instructor.Email ?? string.Empty
+            }).ToList(),
             LectureHours = c.LectureHours,
             LabHours = c.LabHours,
             NumberOfLectures = c.NumberOfLectures,

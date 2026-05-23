@@ -8,8 +8,10 @@ public class Course
     public int TrackId { get; set; }
     public Track Track { get; set; } = null!;
     
-    public string? InstructorId { get; set; }
-    public ApplicationUser? Instructor { get; set; }
+    public string? LecturerId { get; set; }
+    public ApplicationUser? Lecturer { get; set; }
+    
+    public virtual ICollection<CourseLabAssistant> CourseLabAssistants { get; set; } = new List<CourseLabAssistant>();
     
     public int LectureHours { get; set; }
     public int LabHours { get; set; }

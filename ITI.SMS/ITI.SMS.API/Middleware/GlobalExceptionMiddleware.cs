@@ -55,6 +55,12 @@ public class GlobalExceptionMiddleware
             errorCode = "NOT_FOUND";
             details = new[] { exception.Message };
         }
+        else if (exception is ITI.SMS.Application.Common.Exceptions.ForbiddenException)
+        {
+            statusCode = HttpStatusCode.Forbidden;
+            errorCode = "FORBIDDEN";
+            details = new[] { exception.Message };
+        }
 
         context.Response.StatusCode = (int)statusCode;
 

@@ -996,11 +996,17 @@
             ],
             "format": "int32"
           },
-          "instructorId": {
+          "lecturerId": {
             "type": [
               "null",
               "string"
             ]
+          },
+          "labAssistantIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "lectureHours": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -1103,11 +1109,17 @@
           "name": {
             "type": "string"
           },
-          "instructorId": {
+          "lecturerId": {
             "type": [
               "null",
               "string"
             ]
+          },
+          "labAssistantIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "lectureHours": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -1196,6 +1208,9 @@
             "type": "string"
           },
           "softSkillsNotes": {
+            "type": "string"
+          },
+          "evaluatorId": {
             "type": "string"
           }
         }

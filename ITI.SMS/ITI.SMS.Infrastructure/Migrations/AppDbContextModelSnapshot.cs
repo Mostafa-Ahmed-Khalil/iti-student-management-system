@@ -187,10 +187,6 @@ namespace ITI.SMS.Infrastructure.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("created_at");
 
-                    b.Property<string>("InstructorId")
-                        .HasColumnType("nvarchar(450)")
-                        .HasColumnName("instructor_id");
-
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit")
                         .HasColumnName("is_active");
@@ -202,6 +198,10 @@ namespace ITI.SMS.Infrastructure.Migrations
                     b.Property<int>("LectureHours")
                         .HasColumnType("int")
                         .HasColumnName("lecture_hours");
+
+                    b.Property<string>("LecturerId")
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("lecturer_id");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -219,13 +219,32 @@ namespace ITI.SMS.Infrastructure.Migrations
                     b.HasKey("Id")
                         .HasName("p_k_courses");
 
-                    b.HasIndex("InstructorId")
-                        .HasDatabaseName("i_x_courses_instructor_id");
+                    b.HasIndex("LecturerId")
+                        .HasDatabaseName("i_x_courses_lecturer_id");
 
                     b.HasIndex("TrackId")
                         .HasDatabaseName("i_x_courses_track_id");
 
                     b.ToTable("courses");
+                });
+
+            modelBuilder.Entity("ITI.SMS.Domain.Entities.CourseLabAssistant", b =>
+                {
+                    b.Property<int>("CourseId")
+                        .HasColumnType("int")
+                        .HasColumnName("course_id");
+
+                    b.Property<string>("InstructorId")
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("instructor_id");
+
+                    b.HasKey("CourseId", "InstructorId")
+                        .HasName("p_k_course_lab_assistants");
+
+                    b.HasIndex("InstructorId")
+                        .HasDatabaseName("i_x_course_lab_assistants_instructor_id");
+
+                    b.ToTable("course_lab_assistants");
                 });
 
             modelBuilder.Entity("ITI.SMS.Domain.Entities.Enrollment", b =>
@@ -280,6 +299,11 @@ namespace ITI.SMS.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasColumnName("course_id");
 
+                    b.Property<string>("EvaluatorId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("evaluator_id");
+
                     b.Property<int>("LabNumber")
                         .HasColumnType("int")
                         .HasColumnName("lab_number");
@@ -289,6 +313,7 @@ namespace ITI.SMS.Infrastructure.Migrations
                         .HasColumnName("last_updated_at");
 
                     b.Property<decimal>("Score")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)")
                         .HasColumnName("score");
 
@@ -309,6 +334,9 @@ namespace ITI.SMS.Infrastructure.Migrations
 
                     b.HasKey("Id")
                         .HasName("p_k_lab_evaluations");
+
+                    b.HasIndex("EvaluatorId")
+                        .HasDatabaseName("i_x_lab_evaluations_evaluator_id");
 
                     b.HasIndex("StudentId")
                         .HasDatabaseName("i_x_lab_evaluations_student_id");
@@ -516,11 +544,11 @@ namespace ITI.SMS.Infrastructure.Migrations
 
             modelBuilder.Entity("ITI.SMS.Domain.Entities.Course", b =>
                 {
-                    b.HasOne("ITI.SMS.Domain.Entities.ApplicationUser", "Instructor")
+                    b.HasOne("ITI.SMS.Domain.Entities.ApplicationUser", "Lecturer")
                         .WithMany()
-                        .HasForeignKey("InstructorId")
+                        .HasForeignKey("LecturerId")
                         .OnDelete(DeleteBehavior.SetNull)
-                        .HasConstraintName("f_k_courses_users_instructor_id");
+                        .HasConstraintName("f_k_courses_users_lecturer_id");
 
                     b.HasOne("ITI.SMS.Domain.Entities.Track", "Track")
                         .WithMany("Courses")
@@ -529,9 +557,30 @@ namespace ITI.SMS.Infrastructure.Migrations
                         .IsRequired()
                         .HasConstraintName("f_k_courses__tracks_track_id");
 
-                    b.Navigation("Instructor");
+                    b.Navigation("Lecturer");
 
                     b.Navigation("Track");
+                });
+
+            modelBuilder.Entity("ITI.SMS.Domain.Entities.CourseLabAssistant", b =>
+                {
+                    b.HasOne("ITI.SMS.Domain.Entities.Course", "Course")
+                        .WithMany("CourseLabAssistants")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("f_k_course_lab_assistants_courses_course_id");
+
+                    b.HasOne("ITI.SMS.Domain.Entities.ApplicationUser", "Instructor")
+                        .WithMany()
+                        .HasForeignKey("InstructorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("f_k_course_lab_assistants_users_instructor_id");
+
+                    b.Navigation("Course");
+
+                    b.Navigation("Instructor");
                 });
 
             modelBuilder.Entity("ITI.SMS.Domain.Entities.Enrollment", b =>
@@ -564,6 +613,13 @@ namespace ITI.SMS.Infrastructure.Migrations
                         .IsRequired()
                         .HasConstraintName("f_k_lab_evaluations_courses_course_id");
 
+                    b.HasOne("ITI.SMS.Domain.Entities.ApplicationUser", "Evaluator")
+                        .WithMany()
+                        .HasForeignKey("EvaluatorId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired()
+                        .HasConstraintName("f_k_lab_evaluations_users_evaluator_id");
+
                     b.HasOne("ITI.SMS.Domain.Entities.ApplicationUser", "Student")
                         .WithMany()
                         .HasForeignKey("StudentId")
@@ -572,6 +628,8 @@ namespace ITI.SMS.Infrastructure.Migrations
                         .HasConstraintName("f_k_lab_evaluations_users_student_id");
 
                     b.Navigation("Course");
+
+                    b.Navigation("Evaluator");
 
                     b.Navigation("Student");
                 });
@@ -670,6 +728,11 @@ namespace ITI.SMS.Infrastructure.Migrations
             modelBuilder.Entity("ITI.SMS.Domain.Entities.Branch", b =>
                 {
                     b.Navigation("Tracks");
+                });
+
+            modelBuilder.Entity("ITI.SMS.Domain.Entities.Course", b =>
+                {
+                    b.Navigation("CourseLabAssistants");
                 });
 
             modelBuilder.Entity("ITI.SMS.Domain.Entities.Track", b =>

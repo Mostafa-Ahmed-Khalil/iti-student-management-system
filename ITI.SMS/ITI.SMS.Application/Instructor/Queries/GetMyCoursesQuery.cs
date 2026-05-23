@@ -13,6 +13,7 @@ public class InstructorCourseDto
     public int NumberOfLectures { get; set; }
     public int LabHours { get; set; }
     public int LectureHours { get; set; }
+    public string Role { get; set; } = string.Empty;
 }
 
 public record GetMyCoursesQuery(string InstructorId) : IRequest<List<InstructorCourseDto>>;
@@ -39,7 +40,10 @@ public class GetMyCoursesQueryHandler : IRequestHandler<GetMyCoursesQuery, List<
             NumberOfLabs = c.NumberOfLabs,
             NumberOfLectures = c.NumberOfLectures,
             LabHours = c.LabHours,
-            LectureHours = c.LectureHours
+            LectureHours = c.LectureHours,
+            Role = (c.LecturerId == request.InstructorId && c.CourseLabAssistants.Any(la => la.InstructorId == request.InstructorId)) 
+                ? "Both" 
+                : (c.LecturerId == request.InstructorId ? "Lecturer" : "Lab Assistant")
         }).ToList();
     }
 }

@@ -15,6 +15,7 @@ import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
+import { MultiSelectModule } from 'primeng/multiselect';
 import { InputNumberModule } from 'primeng/inputnumber';
 
 @Component({
@@ -23,7 +24,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
   imports: [
     CommonModule, RouterModule, ReactiveFormsModule,
     TableModule, ButtonModule, CardModule, DialogModule,
-    InputTextModule, SelectModule, InputNumberModule
+    InputTextModule, SelectModule, MultiSelectModule, InputNumberModule
   ],
   templateUrl: './course-management.component.html',
   styleUrls: ['./course-management.component.css']
@@ -49,7 +50,8 @@ export class CourseManagementComponent implements OnInit {
     name: ['', Validators.required],
     lectureHours: [0, [Validators.required, Validators.min(0)]],
     labHours: [0, [Validators.required, Validators.min(0)]],
-    instructorId: ['', Validators.required]
+    lecturerId: ['', Validators.required],
+    labAssistantIds: [[]]
   });
 
   ngOnInit() {
@@ -67,7 +69,10 @@ export class CourseManagementComponent implements OnInit {
     this.isLoading.set(true);
     this.courseService.getCoursesByTrack(trackId).subscribe({
       next: (res) => {
-        if (res.success) this.courses.set(res.data);
+        if (res.success) {
+          const sortedCourses = res.data.sort((a, b) => a.name.localeCompare(b.name));
+          this.courses.set(sortedCourses);
+        }
         this.isLoading.set(false);
       },
       error: () => {
@@ -102,7 +107,8 @@ export class CourseManagementComponent implements OnInit {
       name: course.name,
       lectureHours: course.lectureHours,
       labHours: course.labHours,
-      instructorId: course.instructorId
+      lecturerId: course.lecturerId,
+      labAssistantIds: course.labAssistants?.map(a => a.id) || []
     });
     this.isModalOpen.set(true);
   }

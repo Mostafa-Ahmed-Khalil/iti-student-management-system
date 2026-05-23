@@ -10,14 +10,19 @@ import { DialogModule } from 'primeng/dialog';
 import { TabsModule } from 'primeng/tabs';
 import { TextareaModule } from 'primeng/textarea';
 import { TooltipModule } from 'primeng/tooltip';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { ChartModule } from 'primeng/chart';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-lab-evaluation',
   standalone: true,
   imports: [
-    CommonModule, RouterModule, ReactiveFormsModule,
+    CommonModule, RouterModule, ReactiveFormsModule, FormsModule,
     ButtonModule, DialogModule, TabsModule,
-    TextareaModule, TooltipModule
+    TextareaModule, TooltipModule, InputNumberModule,
+    ChartModule, MultiSelectModule
   ],
   templateUrl: './lab-evaluation.component.html',
   styleUrls: ['./lab-evaluation.component.css']
@@ -39,9 +44,14 @@ export class LabEvaluationComponent implements OnInit {
   activeStudentId = signal('');
   activeLabNumber = signal(0);
   activeStudentName = signal('');
+  
+  activeEvaluation = computed(() => {
+    if (!this.activeStudentId() || !this.activeLabNumber()) return null;
+    return this.getEval(this.activeStudentId(), this.activeLabNumber());
+  });
 
   notesForm: FormGroup = this.fb.group({
-    score: [null, [Validators.required, Validators.min(0), Validators.max(1)]],
+    score: [null, [Validators.required, Validators.min(0), Validators.max(10)]],
     techNotes: ['', Validators.required],
     softSkillsNotes: ['', Validators.required]
   });
@@ -50,6 +60,56 @@ export class LabEvaluationComponent implements OnInit {
     const n = this.grid()?.numberOfLabs ?? 0;
     return Array.from({ length: n }, (_, i) => i + 1);
   });
+
+  // Chart state
+  isChartOpen = signal(false);
+  chartStudentName = signal('');
+  chartStudentId = signal('');
+  selectedLabs = signal<number[]>([]);
+
+  labOptions = computed(() => {
+    return this.labNumbers().map(n => ({ label: `Lab ${n}`, value: n }));
+  });
+
+  chartData = computed(() => {
+    const studentId = this.chartStudentId();
+    const labs = this.selectedLabs().sort((a, b) => a - b);
+    if (!studentId || labs.length === 0) return null;
+
+    const scores = labs.map(labNum => {
+      const ev = this.getEval(studentId, labNum);
+      return ev ? ev.score : null;
+    });
+
+    return {
+      labels: labs.map(l => `Lab ${l}`),
+      datasets: [
+        {
+          label: 'Score',
+          data: scores,
+          fill: false,
+          borderColor: '#0969da',
+          tension: 0.4
+        }
+      ]
+    };
+  });
+
+  chartOptions = {
+    plugins: {
+      legend: { display: false }
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        max: 10,
+        title: { display: true, text: 'Score' }
+      },
+      x: {
+        title: { display: true, text: 'Lab' }
+      }
+    }
+  };
 
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
@@ -66,6 +126,7 @@ export class LabEvaluationComponent implements OnInit {
     this.isLoading.set(true);
     this.instructorService.getLabEvaluations(this.courseId(), this.trackId()).subscribe({
       next: (grid) => {
+        grid.students.sort((a, b) => a.fullName.localeCompare(b.fullName));
         this.grid.set(grid);
         this.isLoading.set(false);
       },
@@ -128,5 +189,18 @@ export class LabEvaluationComponent implements OnInit {
 
   isSavingCell(studentId: string, labNumber: number): boolean {
     return this.savingCell() === this.cellKey(studentId, labNumber);
+  }
+
+  openChart(studentId: string, studentName: string) {
+    this.chartStudentId.set(studentId);
+    this.chartStudentName.set(studentName);
+    
+    // Default to all labs that have an evaluation for this student
+    const evaluatedLabs = this.grid()?.evaluations
+      .filter(e => e.studentId === studentId)
+      .map(e => e.labNumber) ?? [];
+      
+    this.selectedLabs.set(evaluatedLabs.length > 0 ? evaluatedLabs : this.labNumbers());
+    this.isChartOpen.set(true);
   }
 }

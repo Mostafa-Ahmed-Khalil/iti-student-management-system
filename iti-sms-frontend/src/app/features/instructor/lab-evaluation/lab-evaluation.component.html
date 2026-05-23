@@ -24,12 +24,17 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let student of grid()!.students">
-            <td class="student-name sticky-col">{{ student.fullName }}</td>
+          <tr *ngFor="let student of grid()!.students; let i = index">
+            <td class="student-name sticky-col">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span>{{ i + 1 }}. {{ student.fullName }}</span>
+                <p-button icon="pi pi-chart-line" variant="text" size="small" pTooltip="View Progress Chart" (onClick)="openChart(student.id, student.fullName)"></p-button>
+              </div>
+            </td>
             <td *ngFor="let lab of labNumbers()" class="eval-cell"
                 [class.evaluated]="getEval(student.id, lab)"
-                [class.score-1]="getEval(student.id, lab)?.score === 1"
-                [class.score-0]="getEval(student.id, lab)?.score === 0"
+                [class.score-high]="getEval(student.id, lab)?.score! >= 8"
+                [class.score-low]="getEval(student.id, lab)?.score! < 5"
                 (click)="openNotes(student.id, student.fullName, lab)"
                 [pTooltip]="getEval(student.id, lab) ? 'Score: ' + getEval(student.id, lab)!.score + ' — Click to edit' : 'Click to evaluate'"
                 tooltipPosition="top">
@@ -71,14 +76,15 @@
     <div class="p-fluid">
 
       <div class="field score-field">
-        <label>Score (0 or 1)</label>
-        <div class="score-toggles">
-          <button type="button" class="score-btn" [class.active]="notesForm.get('score')?.value === 0"
-                  (click)="notesForm.patchValue({ score: 0 })">0</button>
-          <button type="button" class="score-btn score-1" [class.active]="notesForm.get('score')?.value === 1"
-                  (click)="notesForm.patchValue({ score: 1 })">1</button>
+        <label>Score (0 to 10)</label>
+        <p-inputNumber formControlName="score" [min]="0" [max]="10" placeholder="Enter score"></p-inputNumber>
+        <small class="error-hint" *ngIf="notesForm.get('score')?.invalid && notesForm.get('score')?.touched">Please enter a score between 0 and 10.</small>
+      </div>
+
+      <div class="notes-preview" *ngIf="activeEvaluation()">
+        <div class="evaluator-stamp" *ngIf="activeEvaluation()?.evaluatorName">
+          <small><i class="pi pi-user mr-1"></i> Evaluated by: <strong>{{ activeEvaluation()?.evaluatorName }}</strong></small>
         </div>
-        <small class="error-hint" *ngIf="notesForm.get('score')?.value === null">Please select a score.</small>
       </div>
 
       <p-tabs value="0">
@@ -119,7 +125,41 @@
     <div class="dialog-footer">
       <p-button label="Cancel" icon="pi pi-times" variant="text" (onClick)="isNotesOpen.set(false)" type="button"></p-button>
       <p-button label="Save Evaluation" icon="pi pi-check" type="submit"
-                [disabled]="notesForm.invalid || notesForm.get('score')?.value === null"></p-button>
+                [disabled]="notesForm.invalid"></p-button>
     </div>
   </form>
+</p-dialog>
+
+<!-- Chart Dialog -->
+<p-dialog
+  [header]="'Progress Chart: ' + chartStudentName()"
+  [(visible)]="isChartOpen"
+  [modal]="true"
+  [style]="{ width: '700px' }"
+  [draggable]="false"
+  [resizable]="false">
+  
+  <div class="p-fluid">
+    <div class="field" style="margin-bottom: 2rem;">
+      <label>Select Labs</label>
+      <p-multiSelect 
+        [options]="labOptions()" 
+        [(ngModel)]="selectedLabs" 
+        optionLabel="label" 
+        optionValue="value" 
+        placeholder="Select labs to plot"
+        display="chip">
+      </p-multiSelect>
+    </div>
+    
+    <div class="chart-container" *ngIf="chartData(); else noChartData">
+      <p-chart type="line" [data]="chartData()!" [options]="chartOptions"></p-chart>
+    </div>
+    <ng-template #noChartData>
+      <div class="empty-state">
+        <i class="pi pi-chart-line"></i>
+        <p>No evaluation data selected or available to plot.</p>
+      </div>
+    </ng-template>
+  </div>
 </p-dialog>

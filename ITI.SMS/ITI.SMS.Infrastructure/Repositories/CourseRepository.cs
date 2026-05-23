@@ -17,14 +17,16 @@ public class CourseRepository : ICourseRepository
     public async Task<Course?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
     {
         return await _context.Courses
-            .Include(c => c.Instructor)
+            .Include(c => c.Lecturer)
+            .Include(c => c.CourseLabAssistants).ThenInclude(la => la.Instructor)
             .FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
     }
 
     public async Task<IEnumerable<Course>> GetByTrackIdAsync(int trackId, CancellationToken cancellationToken = default)
     {
         return await _context.Courses
-            .Include(c => c.Instructor)
+            .Include(c => c.Lecturer)
+            .Include(c => c.CourseLabAssistants).ThenInclude(la => la.Instructor)
             .Where(c => c.TrackId == trackId)
             .ToListAsync(cancellationToken);
     }
@@ -33,8 +35,17 @@ public class CourseRepository : ICourseRepository
     {
         return await _context.Courses
             .Include(c => c.Track)
-            .Where(c => c.InstructorId == instructorId && c.IsActive)
+            .Include(c => c.CourseLabAssistants)
+            .Where(c => (c.LecturerId == instructorId || c.CourseLabAssistants.Any(la => la.InstructorId == instructorId)) && c.IsActive)
             .ToListAsync(cancellationToken);
+    }
+
+    public async Task<bool> IsAssignedToAsync(int courseId, string instructorId, CancellationToken cancellationToken = default)
+    {
+        return await _context.Courses
+            .AnyAsync(c => c.Id == courseId && 
+                           (c.LecturerId == instructorId || c.CourseLabAssistants.Any(la => la.InstructorId == instructorId)), 
+                      cancellationToken);
     }
 
     public async Task<Course> AddAsync(Course course, CancellationToken cancellationToken = default)
